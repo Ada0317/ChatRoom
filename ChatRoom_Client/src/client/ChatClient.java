@@ -14,7 +14,11 @@ import msg.*;
 import tools.DialogTool;
 import tools.PackageTool;
 import tools.ParseTool;
-
+/**
+ * ChatClient
+ * 该类用于与服务器进行通信
+ * @author He11o_Liu
+ */
 public class ChatClient extends Thread {
 	private String ServerIP;
 	private int port;
@@ -23,11 +27,9 @@ public class ChatClient extends Thread {
 	private InputStream ins;
 	private OutputStream ous;
 
-	/*
+	/**
 	 * ChatClient的构建函数
-	 * 
 	 * @param ServerIP 服务器的IP
-	 * 
 	 * @param port 端口
 	 */
 	public ChatClient(String ServerIP, int port) {
@@ -35,22 +37,15 @@ public class ChatClient extends Thread {
 		this.port = port;
 	}
 
-	
-	
-	/*
-	 * 不间断地从服务器读取信息
-	 * 
-	 * @see java.lang.Thread#run()
+	/**
+	 * 不断的处理从服务器发来的信息
 	 */
 	public void run() {
 		while(true){
-			/*
-			 * 接收服务器信息
-			 */
 			try {
 				processMsg();
 			} catch (IOException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				System.out.println("与服务器断开连接");
 				JOptionPane.showMessageDialog(null,"与服务器断开连接","ERROR",JOptionPane.ERROR_MESSAGE);
 				System.exit(0);
@@ -58,9 +53,8 @@ public class ChatClient extends Thread {
 		}
 	}
 
-	/*
+	/**
 	 * 连接到服务器
-	 * 
 	 * @return 是否连接到服务器
 	 */
 	public boolean ConnectServer() {
@@ -76,17 +70,14 @@ public class ChatClient extends Thread {
 		return false;
 	}
 
-	/*
-	 * 这个方法用于注册用户
-	 * 
+	/**
+	 * Register
+	 * 注册用户
 	 * @param NikeName 昵称
-	 * 
 	 * @param PassWord 密码
-	 * 
 	 * @return 注册状态
 	 */
 	public boolean Reg(String NikeName, String PassWord) {
-
 		try {
 			MsgReg mr = new MsgReg();
 			int len = 33; // MsgReg的长度为固定的33
@@ -104,9 +95,7 @@ public class ChatClient extends Thread {
 			byte[] sendMsg = PackageTool.packMsg(mr);
 			ous.write(sendMsg);
 
-			/*
-			 * 接收服务器的反馈信息
-			 */
+			// 接收服务器的反馈信息
 			byte[] data = receiveMsg();
 
 			// 将数组转换为类
@@ -138,16 +127,14 @@ public class ChatClient extends Thread {
 		return false;
 	}
 
-	/*
-	 * 这个方法用于登陆
-	 * 
-	 * @param JKNum JK号
-	 * 
-	 * @param pwd 密码
-	 * 
-	 * @return 登陆状态
+	/**
+	 * Login
+	 * 向服务器发送登陆请求
+	 * @param id
+	 * @param pwd
+	 * @return 能否登陆
 	 */
-	public boolean Login(int JKNum, String pwd) {
+	public boolean Login(int id, String pwd) {
 		try {
 			MsgLogin ml = new MsgLogin();
 			int len = 23;
@@ -157,36 +144,24 @@ public class ChatClient extends Thread {
 			ml.setTotalLen(len);
 			ml.setType(type);
 			ml.setDest(Figures.ServerJK);
-			ml.setSrc(JKNum);
+			ml.setSrc(id);
 			ml.setPwd(pwd);
-
 			// 打包MsgLogin
 			byte[] sendmsg = PackageTool.packMsg(ml);
 			ous.write(sendmsg);
-
-			System.out.println("发送完成");
-
-			/*
-			 * 接收服务器的反馈信息
-			 */
-
+			//接收服务器的反馈信息
 			byte[] data = receiveMsg();
-
 			// 将数组转换为类
 			MsgHead recMsg = ParseTool.parseMsg(data);
-
 			if (recMsg.getType() != 0x22) {// 不是登陆反馈信息
 				System.out.println("通讯协议错误");
 				return false;
 			}
-
 			MsgLoginResp mlr = (MsgLoginResp) recMsg;
-
 			byte resp = mlr.getState();
-
 			if (resp == 0) {
 				System.out.println("登陆成功");
-				OwnJKNum = JKNum;
+				OwnJKNum = id;
 				return true;
 			} else if (resp == 1) {
 				System.out.println("JK号或密码错误");
@@ -203,25 +178,20 @@ public class ChatClient extends Thread {
 		return false;
 	}
 	
-
-	/*
-	 * 
-	 * 这个方法用于接收好友列表
-	 * 
+	/**
+	 * ListInfo
+	 * 接收好友列表
+	 * @return
+	 * @throws IOException
 	 */
 	public ListInfo getInfo() throws IOException {
 		ListInfo list = new ListInfo();
-		/*
-		 * 
-		 */
 		byte[] data = receiveMsg();
 		MsgHead recMsg = ParseTool.parseMsg(data);
-
 		if (recMsg.getType() != 0x03) {
 			System.out.println("通讯协议错误");
 			System.exit(0);
 		}
-
 		MsgTeamList mtl = (MsgTeamList) recMsg;
 		list.setNickName(mtl.getUserName());
 		list.setJKNum(mtl.getDest());
@@ -233,16 +203,16 @@ public class ChatClient extends Thread {
 		list.setBodypic(mtl.getBodyPic());
 		list.setNikeName(mtl.getNikeName());
 		list.setBodyState(mtl.getBodyState());
-
 		return list;
 	}
 	
-	
-	
-	/*
-	 * 这个方法用于发送信息
+	/**
+	 * sendMsg
+	 * 发送信息
+	 * @param to
+	 * @param Msg
+	 * @throws IOException
 	 */
-	
 	public void sendMsg(int to,String Msg) throws IOException{
 		MsgChatText mct = new MsgChatText();
 		byte data[] = Msg.getBytes();
@@ -275,13 +245,10 @@ public class ChatClient extends Thread {
 		return data;
 	}
 
-	
-	
-	
-	
-	
-	/*
-	 * 这个方法用于处理从服务器传过来的信息
+	/**
+	 * processMsg
+	 * 接受服务器传来的消息
+	 * @throws IOException
 	 */
 	public void processMsg() throws IOException{
 		byte[] data = receiveMsg();
@@ -289,36 +256,20 @@ public class ChatClient extends Thread {
 		MsgHead recMsg = ParseTool.parseMsg(data);
 		byte MsgType = recMsg.getType();
 		
-		/*
-		 * 下面根据不同的信息进行处理
-		 */
+		//根据不同的信息进行处理
 		if(MsgType == 0x04){
 			MsgChatText mct = (MsgChatText) recMsg;
 			int from = mct.getSrc();
 			String Msg = mct.getMsgText();
 			DialogTool.ShowMessage(from, Msg);
 		}
-		
-		
-		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	/*
 	 * 下列代码均为测试代码
 	 */
-	
-	
-	
-	
+
 	
 	/*
 	 * 用于测试是否成功接收列表

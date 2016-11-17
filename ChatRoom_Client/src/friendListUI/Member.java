@@ -31,8 +31,6 @@ public class Member extends JLabel {
 	private JLabel lb_JKnum = null; // 显示JK号
 	private boolean is_exit = true;
 	private int MemberJKNum;
-	private boolean hav_msg = false;
-	
 	public int getMemberJKNum() {
 		return MemberJKNum;
 	}
@@ -140,7 +138,6 @@ public class Member extends JLabel {
 				}
 				else{
 					dialog = new DialogUI(nickname,picNum,JKNum);
-					hav_msg = true;//取消消息提醒
 					DialogRegDelTool.RegDialog(JKNum, dialog);
 				}
 			}
@@ -154,7 +151,6 @@ public class Member extends JLabel {
 	 * 当有来自这个人的信息
 	 */
 	public void hav_msg(){
-		hav_msg = true;
 		setIcon(new ImageIcon("img/ListImg/memberBGMsg.jpg"));
 	}
 	

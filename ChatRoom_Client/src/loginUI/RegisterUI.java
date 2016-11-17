@@ -39,7 +39,7 @@ public class RegisterUI extends JFrame {
 		// 设置无标题栏
 		setUndecorated(true);
 
-		// 可以拽着跑
+		// 监听鼠标 确保窗体能够拖拽
 		this.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				isDraging = true;

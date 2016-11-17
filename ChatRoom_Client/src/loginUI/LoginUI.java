@@ -1,7 +1,6 @@
 package loginUI;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -20,51 +19,46 @@ import object.ExitButton;
 import object.MinimizeButton;
 import object.RecButton;
 
+/**
+ * LoginUI
+ * 客户端启动登陆界面
+ * 客户端程序从这里开始
+ * 利用ChatClient连接服务器
+ * 利用LoginAction监听按键
+ * @author He11o_Liu
+ */
 public class LoginUI extends JFrame {
 
 	private int wx, wy;
 	private boolean isDraging = false;
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField JKArea;
 	private JPasswordField passwordField;
 
 	/**
-	 * Launch the application.
+	 * 客户端程序入口
+	 * @param args
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginUI frame = new LoginUI();
-					frame.setVisible(true);
-					LoginAction.LoginJF = frame;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		LoginUI frame = new LoginUI();
+		frame.setVisible(true);
+		LoginAction.LoginJF = frame;
 	}
 
 	/**
-	 * Create the frame.
+	 * 客户端登陆(启动界面)
 	 */
 	public LoginUI() {
-
 		// 设置无标题栏
 		setUndecorated(true);
-
+		// 监听鼠标 确保窗体能够拖拽
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				isDraging = true;
 				wx = e.getX();
 				wy = e.getY();
 			}
-
 			public void mouseReleased(MouseEvent e) {
 				isDraging = false;
 			}
@@ -95,7 +89,6 @@ public class LoginUI extends JFrame {
 		contentPane.add(lblUserName);
 
 		// 设置自制按钮
-
 		ExitButton eb = new ExitButton();
 		int windowWeith = this.getWidth();
 		eb.setBounds(windowWeith - 4 - 40, 0, 40, 30);
@@ -110,6 +103,7 @@ public class LoginUI extends JFrame {
 		lblPassword.setBounds(37, 215, 126, 27);
 		contentPane.add(lblPassword);
 
+		//	设置监听器，用于监听按键事件
 		LoginAction la = new LoginAction();
 
 		JKArea = new JTextField();
@@ -124,7 +118,6 @@ public class LoginUI extends JFrame {
 			public void keyTyped(KeyEvent e) {
 				int keyChar = e.getKeyChar();
 				if (keyChar >= KeyEvent.VK_0 && keyChar <= KeyEvent.VK_9) {
-
 				} else {
 					e.consume(); // 关键，屏蔽掉非法输入
 				}
@@ -139,7 +132,7 @@ public class LoginUI extends JFrame {
 		contentPane.add(lblv);
 
 		RecButton Login = new RecButton("Login");
-		Login.setBounds(225,285,170,40);
+		Login.setBounds(225, 285, 170, 40);
 		contentPane.add(Login);
 		Login.setFocusPainted(false);// 设置不要焦点（文字的边框）
 		Login.addActionListener(la);
@@ -163,6 +156,7 @@ public class LoginUI extends JFrame {
 		label.setBounds(37, 20, 165, 35);
 		contentPane.add(label);
 
+		//利用ChatClient连接服务器
 		ChatClient cc = new ChatClient("localhost", 9090);
 		if (!cc.ConnectServer()) {
 			JOptionPane.showMessageDialog(null, "无法连接服务器", "错误", JOptionPane.ERROR_MESSAGE);
