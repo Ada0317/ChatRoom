@@ -9,15 +9,15 @@ public class UserInfo {
 	 */
 
 	private int JKNum;// 保存该用户的JK号
-	private String NickName;// 保存该用户的昵称
-	private String PassWord;// 保存该用户的IP
-	private int Pic;
+	private String nickName;// 保存该用户的昵称
+	private String passWord;// 保存该用户的IP
+	private int avatar;
 
 	/*
 	 * 用户好友信息
 	 */
 
-	private byte listCount;// 保存有多少组好友
+	private byte collectionCount;// 保存有多少组好友
 	private String ListName[];// 保存每个分组的名称
 	private byte[] bodyCount;// 每组有多少个人
 	private int bodyNum[][];// 每个好友的JK号
@@ -25,11 +25,11 @@ public class UserInfo {
 	private String nikeName[][];// 每个好友的昵称
 
 	public byte getListCount() {
-		return listCount;
+		return collectionCount;
 	}
 
 	public void setListCount(byte listCount) {
-		this.listCount = listCount;
+		this.collectionCount = listCount;
 	}
 
 	public String[] getListName() {
@@ -73,23 +73,23 @@ public class UserInfo {
 	}
 
 	public String getNickName() {
-		return NickName;
+		return nickName;
 	}
 
-	public void setNickName(String nickName) {
-		NickName = nickName;
+	public void setNickName(String nick) {
+		nickName = nick;
 	}
 
 	public String getPassWord() {
-		return PassWord;
+		return passWord;
 	}
 
-	public void setPassWord(String passWord) {
-		PassWord = passWord;
+	public void setPassWord(String pw) {
+		passWord = pw;
 	}
 
 	public boolean equals(UserInfo compare) {
-		if (compare.getJKNum() == JKNum && compare.getPassWord().equals(PassWord)) {
+		if (compare.getJKNum() == JKNum && compare.getPassWord().equals(passWord)) {
 			return true;
 		}
 		return false;
@@ -103,11 +103,12 @@ public class UserInfo {
 		this.bodypic = bodypic;
 	}
 
-	public int getPic() {
-		return Pic;
+	public int getAvatar() {
+		return avatar;
 	}
 
-	public void setPic(int pic) {
-		Pic = pic;
+	public void setAvatar(int avatar) {
+		this.avatar = avatar;
 	}
+
 }
