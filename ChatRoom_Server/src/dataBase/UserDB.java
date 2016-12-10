@@ -23,7 +23,7 @@ public class UserDB {
 		user.setJKNum(0);
 		user.setNickName("Liu");
 		user.setPassWord("123");
-		user.setPic(2);
+		user.setAvatar(2);
 		
 		user.setListCount((byte) 2);
 
@@ -60,7 +60,7 @@ public class UserDB {
 		user.setJKNum(1);
 		user.setNickName("Penny");
 		user.setPassWord("123");
-		user.setPic(1);
+		user.setAvatar(1);
 		user.setListCount((byte) 1);
 
 		listName = new String[1];

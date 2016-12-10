@@ -1,5 +1,8 @@
 package dataBase;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /*
  * 用户基本信息
  */
@@ -10,8 +13,14 @@ public class UserInfo {
 
 	private int JKNum;// 保存该用户的JK号
 	private String nickName;// 保存该用户的昵称
-	private String passWord;// 保存该用户的IP
+//	private String passWord;// 保存该用户的IP
 	private int avatar;
+
+	UserInfo(ResultSet userResult) throws SQLException {
+	    JKNum = userResult.getInt("user_id");
+	    nickName = userResult.getString("nick_name");
+	    avatar = userResult.getInt("avatar");
+    }
 
 	/*
 	 * 用户好友信息
@@ -80,16 +89,16 @@ public class UserInfo {
 		nickName = nick;
 	}
 
-	public String getPassWord() {
-		return passWord;
-	}
-
-	public void setPassWord(String pw) {
-		passWord = pw;
-	}
+//	public String getPassWord() {
+//		return passWord;
+//	}
+//
+//	public void setPassWord(String pw) {
+//		passWord = pw;
+//	}
 
 	public boolean equals(UserInfo compare) {
-		if (compare.getJKNum() == JKNum && compare.getPassWord().equals(passWord)) {
+		if (compare.getJKNum() == JKNum/* && compare.getPassWord().equals(passWord)*/) {
 			return true;
 		}
 		return false;
