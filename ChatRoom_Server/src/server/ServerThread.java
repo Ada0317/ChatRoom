@@ -65,6 +65,7 @@ public class ServerThread extends Thread {
 	 * 该方法用于处理从客户端传过来的信息 (未登录)
 	 */
 	public void processLogin() throws Exception {
+		UserModel model = new UserModel(DBConnection.getInstance());
 		ous = client.getOutputStream();
 		InputStream ins = client.getInputStream();
 		DataInputStream dis = new DataInputStream(ins);
@@ -82,10 +83,11 @@ public class ServerThread extends Thread {
 			MsgReg mr = (MsgReg) msg;
 
 			// 注册用户
-			UserInfo newuser = new UserInfo();
-			newuser.setNickName(mr.getNikeName());
-			newuser.setPassWord(mr.getPwd());
-			int JKNum = RegTool.UserReg(newuser);
+
+			UserInfo newuser = model.createUser(mr.getPwd(), mr.getNikeName(), 1234);
+//			newuser.setNickName(mr.getNikeName());
+//			newuser.setPassWord(mr.getPwd());
+			int JKNum = newuser.getJKNum();
 
 			/*
 			 * 服务器准备返回信息
@@ -116,10 +118,11 @@ public class ServerThread extends Thread {
 			byte checkmsg;// 用来保存状态信息
 
 			// DAO验证用户是否存在
-			UserInfo check = new UserInfo();
-			check.setJKNum(ml.getSrc());
-			check.setPassWord(ml.getPwd());
-			if (DAOTool.CheckLogin(check)) {// 如果验证了用户存在
+
+//			UserInfo check = new UserInfo();
+//			check.setJKNum(ml.getSrc());
+//			check.setPassWord(ml.getPwd());
+			if (model.userAuthorization(ml.getSrc(), ml.getPwd())) {// 如果验证了用户存在
 				checkmsg = 0;
 			} else {
 				checkmsg = 1;
@@ -151,15 +154,15 @@ public class ServerThread extends Thread {
 			 */
 			if (checkmsg == 0) {
 
-				UserJK = check.getJKNum();// 每一个Thread里面有保存这个线程对应的用户JK号的参数
+//				UserJK = check.getJKNum();// 每一个Thread里面有保存这个线程对应的用户JK号的参数
 				ThreadRegDelTool.RegThread(this); // 向线程数据库中注册这个线程
 
-				UserInfo user = DAOTool.getinfo(ml.getSrc());
-
+//				UserInfo user = DAOTool.getinfo(ml.getSrc());
+				UserInfo user = model.getUserByJK(ml.getSrc());
 				msgtype = 0x03;
 
 				String userName = user.getNickName();
-				int pic = user.getPic();
+				int pic = user.getAvatar();
 				byte listCount = user.getListCount();
 				byte[] bodyCount = user.getBodyCount();
 				byte[][] bodyState;

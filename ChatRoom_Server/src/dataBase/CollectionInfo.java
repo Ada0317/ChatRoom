@@ -50,4 +50,8 @@ public class CollectionInfo {
         }
         return members;
     }
+    public String toString() {
+        return String.format("Collection: %s, id: %d, ownerJK: %d", name, id, ownerJK);
+    }
+
 }

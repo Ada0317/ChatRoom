@@ -18,7 +18,7 @@ public class UserInfo {
 
 	UserInfo(ResultSet userResult) throws SQLException {
 	    JKNum = userResult.getInt("user_id");
-	    nickName = userResult.getString("nick_name");
+	    nickName = userResult.getString("nickname");
 	    avatar = userResult.getInt("avatar");
     }
 
