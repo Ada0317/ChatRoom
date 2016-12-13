@@ -10,6 +10,27 @@ public class CollectionInfo {
     private int ownerJK;
     private int[] membersJK;
     private List<UserInfo> members;
+    private String name;
+    private int id;
+
+    CollectionInfo(ResultSet rs) throws SQLException {
+        ownerJK = rs.getInt("user_id");
+        name = rs.getString("name");
+        id = rs.getInt("collection_id");
+    }
+    
+    public List<UserInfo> getMembers() throws Exception {
+        if (members == null) {
+            UserModel userModel = new UserModel(DBConnection.getInstance());
+            members = userModel.getUsersInCollection(id);
+        }
+        return members;
+    }
+    
+    public String toString() {
+        return String.format("Collection: %s, id: %d, ownerJK: %d", name, id, ownerJK);
+    }
+    
 
     public int getOwnerJK() {
         return ownerJK;
@@ -33,25 +54,6 @@ public class CollectionInfo {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    private String name;
-    private int id;
-
-    CollectionInfo(ResultSet rs) throws SQLException {
-        ownerJK = rs.getInt("user_id");
-        name = rs.getString("name");
-        id = rs.getInt("collection_id");
-    }
-    public List<UserInfo> getMembers() throws Exception {
-        if (members == null) {
-            UserModel userModel = new UserModel(DBConnection.getInstance());
-            members = userModel.getUsersInCollection(id);
-        }
-        return members;
-    }
-    public String toString() {
-        return String.format("Collection: %s, id: %d, ownerJK: %d", name, id, ownerJK);
     }
 
 }

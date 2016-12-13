@@ -150,12 +150,13 @@ public class ServerThread extends Thread {
 			 * 如果登陆操作完成， 发送好友列表
 			 */
 			if (checkmsg == 0) {
+				UserJK = ml.getSrc();
 				ThreadRegDelTool.RegThread(this); // 向线程数据库中注册这个线程
 				UserInfo user = model.getUserByJK(ml.getSrc());
 				msgtype = 0x03;
 				String userName = user.getNickName();
 				int pic = user.getAvatar();
-				byte listCount = user.getListCount();
+				byte listCount = user.getCollectionCount();
 				byte[] bodyCount = user.getBodyCount();
 				byte[][] bodyState;
 				int[][] BodyNum = user.getBodyNum();
@@ -207,7 +208,7 @@ public class ServerThread extends Thread {
 				mtl.setBodyCount(bodyCount);
 				mtl.setBodyNum(BodyNum);
 				mtl.setBodyPic(BodyPic);
-				mtl.setNikeName(user.getNikeName());
+				mtl.setNikeName(user.getBodyName());
 				mtl.setBodyState(bodyState);
 
 
@@ -229,6 +230,7 @@ public class ServerThread extends Thread {
 	public void processChat() throws Exception {
 		InputStream ins = client.getInputStream();
 		DataInputStream dis = new DataInputStream(ins);
+		
 		int totalLen = dis.readInt();
 		byte[] data = new byte[totalLen - 4];
 		dis.readFully(data);
@@ -243,11 +245,12 @@ public class ServerThread extends Thread {
 			int from = mct.getSrc();
 			int to = mct.getDest();
 			String msgText = mct.getMsgText();
+			System.out.println("Sending Test!!");
+			System.out.println("From "+from+" To "+to+" Text "+msgText);
+			
 			if(!ChatTool.sendMsg(from, to, msgText)){
+				System.out.println("SaveOnServer");
 				
-				/*
-				 * 没有发送成功
-				 */
 				//保存到服务器上	
 				ChatTool.saveOnServer(from, to,msgText);
 			}

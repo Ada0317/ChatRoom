@@ -1,6 +1,5 @@
 package dataBase;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.*;
 
@@ -12,18 +11,24 @@ public class CollectionModel {
     public CollectionModel(DBConnection conn) {
         connection = conn;
     }
-    private List<CollectionInfo> getColletionsByJK(int jk) throws SQLException {
+    
+    /**
+     * getColletionsByJK
+     * @param jk
+     * @return
+     * @throws SQLException
+     */
+    public List<CollectionInfo> getColletionsByJK(int jk) throws SQLException {
         ResultSet rs = connection.query("SELECT * FROM collection where user_id=" + jk);
-        int count = rs.getFetchSize();
-
         ArrayList<CollectionInfo> res = new ArrayList<>();
-
         while (rs.next()) {
             res.add(new CollectionInfo(rs));
         }
+        rs.close();
         return res;
     }
-    private int addUserToCollection(int jk, int coll_id) throws SQLException {
+    
+    public int addUserToCollection(int jk, int coll_id) throws SQLException {
         return connection.update(String.format("INSERT INTO collection_entry (user_id, collection_id) VALUES (%d, %d)", jk, coll_id));
     }
     public CollectionInfo createCollection(int jk, String collName) throws SQLException {
@@ -47,17 +52,24 @@ public class CollectionModel {
     public List<CollectionInfo> getCollectionsByUser(int jk) throws SQLException {
         return getColletionsByJK(jk);
     }
+    /*
     public static void main(String args[]) throws SQLException {
         DBConnection db = DBConnection.getInstance();
-        UserModel userModel = new UserModel(db);
+        //UserModel userModel = new UserModel(db);
         CollectionModel collectionModel = new CollectionModel(db);
-
-        UserInfo user = userModel.createUser("fuck", "hello", 1234);
-
-        CollectionInfo coll = collectionModel.createCollection(user.getJKNum(), "test");
-
-        System.out.println(coll.toString());
-        userModel.removeUser(user.getJKNum());
-        collectionModel.removeCollection(coll.getId());
-    }
+        //UserInfo user = userModel.getUserByJK(0);
+        List<CollectionInfo>  coll = collectionModel.getColletionsByJK(0);
+		List<UserInfo> testlist;
+        for(int j = 0; j<coll.size();j++){
+        	try {
+        		System.out.println(coll.get(j).toString());
+				testlist = coll.get(j).getMembers();
+				for(int i = 0; i < testlist.size();i++){
+		        	System.out.println(testlist.get(i).getNickName());
+		        }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        }
+    }*/
 }

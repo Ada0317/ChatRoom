@@ -45,8 +45,8 @@ public class ChatClient extends Thread {
 			try {
 				processMsg();
 			} catch (IOException e) {
-				//e.printStackTrace();
-				System.out.println("与服务器断开连接");
+				e.printStackTrace();
+				System.out.println("脱离主进程与服务器断开连接");
 				JOptionPane.showMessageDialog(null,"与服务器断开连接","ERROR",JOptionPane.ERROR_MESSAGE);
 				System.exit(0);
 			}

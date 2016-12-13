@@ -17,17 +17,32 @@ public class ChatTool {
 	 * @return 是否成功发送
 	 */
 	public static boolean sendMsg(int from,int to, String msg) {
-		if (!ThreadDB.threadDB.containsKey(String.valueOf(to))) {
-			return false;
-		}
+		/*
+		 * Check User Online
+		 */
+		
 		
 		/*
 		 * 向用户发送信息
 		 */
 		ServerThread st = ThreadDB.threadDB.get(String.valueOf(to));
+		
+		if(st == null ) {
+			System.out.println("目标不在线");
+			return false;
+		}
+		
 		try {
 			st.SendMsg(from, msg);
+			
+			/**********************************************
+			 * TEST OUT
+			 **********************************************
+			 */
+			System.out.println("Finish Sendding");
+			
 			return true;
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
