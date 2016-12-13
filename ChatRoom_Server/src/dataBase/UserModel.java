@@ -16,17 +16,20 @@ public class UserModel {
 
     /**
      * getUserByJK
+     * 根据JK号获取UserInfo对象
+     * 包括用户基本属性以及好友列表
      * @param JK
      * @return UserInfo user
      * @throws SQLException
      * @author Hcyue
      * @author He11o_Liu
-     * 
+     * 2016/12/13
      */
     public UserInfo getUserByJK(int JK) throws SQLException {
         ResultSet rs = db.query("SELECT * FROM users where user_id=" + JK);
         if (rs.next()==false) return null;
         UserInfo user = new UserInfo(rs);
+        
         //Get Friend List
         CollectionModel collectionModel = new CollectionModel(db);
         List<CollectionInfo> coll = collectionModel.getColletionsByJK(JK);
@@ -67,7 +70,7 @@ public class UserModel {
 				e.printStackTrace();
 			}
         }
-        
+        //set friend list
         user.setBodyName(bodyName);
         user.setListName(ListName);
         user.setBodyCount(bodyCount);
@@ -111,12 +114,28 @@ public class UserModel {
         return res;
     }
 
+    /**
+     * createUser
+     * 创建对象
+     * @param passwd
+     * @param nick
+     * @param avatar
+     * @return
+     * @throws SQLException
+     */
     public UserInfo createUser(String passwd, String nick, int avatar) throws SQLException {
         String sql = String.format("INSERT INTO users (nickname, password, avatar) VALUES ('%s', '%s', %d)", nick, passwd, avatar);
         int res = db.insertAndGet(sql);
         return getUserByJK(res);
     }
     
+    /**
+     * removeUser
+     * 删除对象
+     * @param jk
+     * @return
+     * @throws SQLException
+     */
     public int removeUser(int jk) throws SQLException {
         String sql = String.format("DELETE FROM users WHERE user_id=%d", jk);
         int res = db.update(sql);

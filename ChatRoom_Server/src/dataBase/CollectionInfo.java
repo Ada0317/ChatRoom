@@ -12,12 +12,24 @@ public class CollectionInfo {
     private String name;
     private int id;
 
+    /**
+     * CollectionInfo
+     * 从collection表中读取的数据构造info对象
+     * @param rs
+     * @throws SQLException
+     */
     CollectionInfo(ResultSet rs) throws SQLException {
         ownerJK = rs.getInt("user_id");
         name = rs.getString("name");
         id = rs.getInt("collection_id");
     }
     
+    /**
+     * getMembers
+     * 获取一个collection中的对象
+     * @return List<UserInfo>
+     * @throws Exception
+     */
     public List<UserInfo> getMembers() throws Exception {
         if (members == null) {
             UserModel userModel = new UserModel(DBConnection.getInstance());
@@ -26,6 +38,9 @@ public class CollectionInfo {
         return members;
     }
     
+    /**
+     * 输出测试
+     */
     public String toString() {
         return String.format("Collection: %s, id: %d, ownerJK: %d", name, id, ownerJK);
     }
