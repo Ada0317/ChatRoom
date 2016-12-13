@@ -265,12 +265,9 @@ public class ChatClient extends Thread {
 		}
 	}
 
-	
 	/*
 	 * 下列代码均为测试代码
 	 */
-
-	
 	/*
 	 * 用于测试是否成功接收列表
 	 */

@@ -2,3 +2,8 @@
 .DS_store
 # vs_code
 .vscode
+# IDEA
+.idea 
+# ECLIPSE
+.metadata
+.recommenders

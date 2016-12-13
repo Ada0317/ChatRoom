@@ -8,7 +8,6 @@ import java.util.*;
  */
 public class CollectionInfo {
     private int ownerJK;
-    private int[] membersJK;
     private List<UserInfo> members;
     private String name;
     private int id;
