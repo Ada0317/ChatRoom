@@ -1,6 +1,6 @@
 package tools;
 
-import dataBase.UserDB;
+//import dataBase.UserDB;
 import dataBase.UserInfo;
 
 /*
@@ -8,9 +8,12 @@ import dataBase.UserInfo;
  */
 public class RegTool {
 	public static int UserReg(UserInfo newuser) {
+		/*
 		int JKNum = UserDB.userDB.size();
 		newuser.setJKNum(JKNum);
 		UserDB.userDB.add(newuser);
 		return JKNum;
+		*/
+		return 0;
 	}
 }

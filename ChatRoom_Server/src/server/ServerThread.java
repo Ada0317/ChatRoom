@@ -118,10 +118,7 @@ public class ServerThread extends Thread {
 			byte checkmsg;// 用来保存状态信息
 
 			// DAO验证用户是否存在
-
-//			UserInfo check = new UserInfo();
-//			check.setJKNum(ml.getSrc());
-//			check.setPassWord(ml.getPwd());
+			System.out.println(model.userAuthorization(ml.getSrc(), ml.getPwd()));
 			if (model.userAuthorization(ml.getSrc(), ml.getPwd())) {// 如果验证了用户存在
 				checkmsg = 0;
 			} else {
@@ -153,14 +150,9 @@ public class ServerThread extends Thread {
 			 * 如果登陆操作完成， 发送好友列表
 			 */
 			if (checkmsg == 0) {
-
-//				UserJK = check.getJKNum();// 每一个Thread里面有保存这个线程对应的用户JK号的参数
 				ThreadRegDelTool.RegThread(this); // 向线程数据库中注册这个线程
-
-//				UserInfo user = DAOTool.getinfo(ml.getSrc());
 				UserInfo user = model.getUserByJK(ml.getSrc());
 				msgtype = 0x03;
-
 				String userName = user.getNickName();
 				int pic = user.getAvatar();
 				byte listCount = user.getListCount();
