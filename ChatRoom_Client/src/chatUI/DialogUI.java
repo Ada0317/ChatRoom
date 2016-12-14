@@ -11,7 +11,9 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
 import dataBase.DialogDB;
@@ -19,6 +21,7 @@ import dataBase.Figures;
 import object.CloseButton;
 import object.MinimizeButton;
 import object.RecButton;
+import object.ScrollBarUI;
 import tools.DialogTool;
 
 public class DialogUI extends JFrame {
@@ -103,16 +106,27 @@ public class DialogUI extends JFrame {
 
 
 		MsgArea = new JTextArea();
+		JScrollPane scrollPane = new JScrollPane(MsgArea);
+		MsgArea.setEditable(false);
 		MsgArea.setFont(new Font("Microsoft YaHei UI Light", Font.PLAIN, 20));
 		MsgArea.setBackground(Color.LIGHT_GRAY);
-		MsgArea.setBounds(0, 147, 653, 152);
-		contentPane.add(MsgArea);
+		scrollPane.setBounds(0, 147, 653, 152);
+		scrollPane.getVerticalScrollBar().setUI(new ScrollBarUI()); 
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);// 不显示水平滚动条；
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setBorder(null);
+		contentPane.add(scrollPane);
 
 		sendArea = new JTextArea();
+		JScrollPane sendscrollPane = new JScrollPane(sendArea);
 		sendArea.setFont(new Font("Microsoft YaHei UI Light", Font.PLAIN, 20));
 		sendArea.setBackground(Color.LIGHT_GRAY);
-		sendArea.setBounds(0, 325, 653, 96);
-		contentPane.add(sendArea);
+		sendscrollPane.getVerticalScrollBar().setUI(new ScrollBarUI()); 
+		sendscrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);// 不显示水平滚动条；
+		sendscrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		sendscrollPane.setBorder(null);
+		sendscrollPane.setBounds(0, 325, 653, 96);
+		contentPane.add(sendscrollPane);
 
 		RecButton Send = new RecButton("Send");
 		Send.addActionListener(new ActionListener() {
@@ -121,6 +135,7 @@ public class DialogUI extends JFrame {
 					String msg = sendArea.getText();
 					DialogTool.SendMessage(bodyNum, msg);
 					SendMsg(msg);
+					sendArea.setText("");
 				}
 
 			}

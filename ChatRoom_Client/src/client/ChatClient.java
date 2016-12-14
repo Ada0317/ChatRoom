@@ -228,8 +228,7 @@ public class ChatClient extends Thread {
 		
 		byte[] sendMsg = PackageTool.packMsg(mct);
 		ous.write(sendMsg);
-		ous.flush();
-		
+		ous.flush();	
 	}
 
 	/*

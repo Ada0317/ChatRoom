@@ -31,6 +31,24 @@ public class Member extends JLabel {
 	private JLabel lb_JKnum = null; // 显示JK号
 	private boolean is_exit = true;
 	private int MemberJKNum;
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	private int pic;
+	private String nickname;
+	public int getPic() {
+		return pic;
+	}
+
+	public void setPic(int pic) {
+		this.pic = pic;
+	}
+
 	public int getMemberJKNum() {
 		return MemberJKNum;
 	}
@@ -41,6 +59,8 @@ public class Member extends JLabel {
 
 	public Member(int picNum, String nickname, int JKNum, byte state) {
 		MemberJKNum = JKNum;
+		pic = picNum;
+		this.nickname = nickname;
 		setBackground(Color.darkGray);
 		/*
 		 * 设置用户名
@@ -82,7 +102,7 @@ public class Member extends JLabel {
 		JButton UserIcon = new JButton();
 		UserIcon.setBorder(null);
 		UserIcon.setBounds(10, 10, 50, 50);
-		UserIcon.setIcon(new ImageIcon("img/AvatarImg/" + picNum + ".jpg"));
+		UserIcon.setIcon(new ImageIcon("img/AvatarImg/" + pic + ".jpg"));
 
 		/*
 		 * 增加背景 这里必须这么干
@@ -151,6 +171,7 @@ public class Member extends JLabel {
 	 * 当有来自这个人的信息
 	 */
 	public void hav_msg(){
+		System.out.println("Have_A_MSG");
 		setIcon(new ImageIcon("img/ListImg/memberBGMsg.jpg"));
 	}
 	
