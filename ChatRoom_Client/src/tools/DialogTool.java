@@ -5,6 +5,7 @@ import java.io.IOException;
 import chatUI.DialogUI;
 import dataBase.DialogDB;
 import dataBase.Figures;
+import dataBase.UserInfo;
 
 /*
  * 这个工具主要处理会话相关功能
@@ -34,8 +35,16 @@ public class DialogTool {
 			/*
 			 * 没有的话 A new Msg
 			 */
-			Figures.list.Hav_Mem_Msg(from);
-			
+			//Figures.list.Hav_Mem_Msg(from);
+			/*
+			 * 直接弹出窗口
+			 */
+			UserInfo user = Figures.list.findUserByJK(from);
+			System.out.println("New MSG From"+user.getNickName());
+			DialogUI dialog =  new DialogUI(user.getNickName(),user.getPic(), from);
+			DialogRegDelTool.RegDialog(from, dialog);
+			dialog.ShowMsg(msg);
+			dialog.LetsShack();
 		}
 		
 		

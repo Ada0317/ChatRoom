@@ -1,5 +1,8 @@
 package dataBase;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /*
  * 用户基本信息
  */
@@ -10,8 +13,13 @@ public class UserInfo {
 
 	private int JKNum;// 保存该用户的JK号
 	private String nickName;// 保存该用户的昵称
-	private String passWord;// 保存该用户的IP
 	private int avatar;
+
+	UserInfo(ResultSet userResult) throws SQLException {
+	    JKNum = userResult.getInt("user_id");
+	    nickName = userResult.getString("nickname");
+	    avatar = userResult.getInt("avatar");
+    }
 
 	/*
 	 * 用户好友信息
@@ -22,13 +30,13 @@ public class UserInfo {
 	private byte[] bodyCount;// 每组有多少个人
 	private int bodyNum[][];// 每个好友的JK号
 	private int bodypic[][];//好友头像
-	private String nikeName[][];// 每个好友的昵称
+	private String bodyName[][];// 每个好友的昵称
 
-	public byte getListCount() {
+	public byte getCollectionCount() {
 		return collectionCount;
 	}
 
-	public void setListCount(byte listCount) {
+	public void setCollectionCount(byte listCount) {
 		this.collectionCount = listCount;
 	}
 
@@ -56,12 +64,12 @@ public class UserInfo {
 		this.bodyNum = bodyNum;
 	}
 
-	public String[][] getNikeName() {
-		return nikeName;
+	public String[][] getBodyName() {
+		return bodyName;
 	}
 
-	public void setNikeName(String[][] nikeName) {
-		this.nikeName = nikeName;
+	public void setBodyName(String[][] bodyName) {
+		this.bodyName = bodyName;
 	}
 
 	public int getJKNum() {
@@ -80,16 +88,8 @@ public class UserInfo {
 		nickName = nick;
 	}
 
-	public String getPassWord() {
-		return passWord;
-	}
-
-	public void setPassWord(String pw) {
-		passWord = pw;
-	}
-
 	public boolean equals(UserInfo compare) {
-		if (compare.getJKNum() == JKNum && compare.getPassWord().equals(passWord)) {
+		if (compare.getJKNum() == JKNum/* && compare.getPassWord().equals(passWord)*/) {
 			return true;
 		}
 		return false;

@@ -4,6 +4,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import dataBase.ListInfo;
+import dataBase.UserInfo;
 
 /*
  * 这个是好友列表的JPabel
@@ -56,6 +57,21 @@ public class ListPane extends JPanel {
 		this.setLocation(20, 5);
 	}
 
+	public UserInfo findUserByJK(int JKNum){
+		UserInfo result = new UserInfo();
+		for(int i = 0;i<listCount;i++){
+			for(int j = 0; j<bodyCount[i];j++){
+				if(user[i][j].getMemberJKNum() == JKNum){
+					result.setJKNum(JKNum);
+					result.setNickName(user[i][j].getNickname());
+					result.setPic(user[i][j].getPic());
+					break;
+				}
+			}
+		}
+		return result;
+	}
+	
 	public void Hav_Mem_Msg(int JKNum){
 		for(int i = 0;i<listCount;i++){
 			for(int j = 0; j<bodyCount[i];j++){

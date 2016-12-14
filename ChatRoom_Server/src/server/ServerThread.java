@@ -15,6 +15,7 @@ public class ServerThread extends Thread {
 	private OutputStream ous;
 	private int UserJK;
 	private boolean is_Online = false;
+	private UserModel model;
 
 	public int getUserJK() {
 		return UserJK;
@@ -65,6 +66,9 @@ public class ServerThread extends Thread {
 	 * 该方法用于处理从客户端传过来的信息 (未登录)
 	 */
 	public void processLogin() throws Exception {
+		//connect to DataBase
+		model = new UserModel(DBConnection.getInstance());
+		
 		ous = client.getOutputStream();
 		InputStream ins = client.getInputStream();
 		DataInputStream dis = new DataInputStream(ins);
@@ -82,10 +86,9 @@ public class ServerThread extends Thread {
 			MsgReg mr = (MsgReg) msg;
 
 			// 注册用户
-			UserInfo newuser = new UserInfo();
-			newuser.setNickName(mr.getNikeName());
-			newuser.setPassWord(mr.getPwd());
-			int JKNum = RegTool.UserReg(newuser);
+
+			UserInfo newuser = model.createUser(mr.getPwd(), mr.getNikeName(), 1);
+			int JKNum = newuser.getJKNum();
 
 			/*
 			 * 服务器准备返回信息
@@ -116,10 +119,8 @@ public class ServerThread extends Thread {
 			byte checkmsg;// 用来保存状态信息
 
 			// DAO验证用户是否存在
-			UserInfo check = new UserInfo();
-			check.setJKNum(ml.getSrc());
-			check.setPassWord(ml.getPwd());
-			if (DAOTool.CheckLogin(check)) {// 如果验证了用户存在
+			System.out.println(model.userAuthorization(ml.getSrc(), ml.getPwd()));
+			if (model.userAuthorization(ml.getSrc(), ml.getPwd())) {// 如果验证了用户存在
 				checkmsg = 0;
 			} else {
 				checkmsg = 1;
@@ -150,17 +151,13 @@ public class ServerThread extends Thread {
 			 * 如果登陆操作完成， 发送好友列表
 			 */
 			if (checkmsg == 0) {
-
-				UserJK = check.getJKNum();// 每一个Thread里面有保存这个线程对应的用户JK号的参数
+				UserJK = ml.getSrc();
 				ThreadRegDelTool.RegThread(this); // 向线程数据库中注册这个线程
-
-				UserInfo user = DAOTool.getinfo(ml.getSrc());
-
+				UserInfo user = model.getUserByJK(ml.getSrc());
 				msgtype = 0x03;
-
 				String userName = user.getNickName();
-				int pic = user.getPic();
-				byte listCount = user.getListCount();
+				int pic = user.getAvatar();
+				byte listCount = user.getCollectionCount();
 				byte[] bodyCount = user.getBodyCount();
 				byte[][] bodyState;
 				int[][] BodyNum = user.getBodyNum();
@@ -212,7 +209,7 @@ public class ServerThread extends Thread {
 				mtl.setBodyCount(bodyCount);
 				mtl.setBodyNum(BodyNum);
 				mtl.setBodyPic(BodyPic);
-				mtl.setNikeName(user.getNikeName());
+				mtl.setNikeName(user.getBodyName());
 				mtl.setBodyState(bodyState);
 
 
@@ -234,6 +231,7 @@ public class ServerThread extends Thread {
 	public void processChat() throws Exception {
 		InputStream ins = client.getInputStream();
 		DataInputStream dis = new DataInputStream(ins);
+		
 		int totalLen = dis.readInt();
 		byte[] data = new byte[totalLen - 4];
 		dis.readFully(data);
@@ -248,11 +246,12 @@ public class ServerThread extends Thread {
 			int from = mct.getSrc();
 			int to = mct.getDest();
 			String msgText = mct.getMsgText();
+			System.out.println("Sending Test!!");
+			System.out.println("From "+from+" To "+to+" Text "+msgText);
+			
 			if(!ChatTool.sendMsg(from, to, msgText)){
+				System.out.println("SaveOnServer");
 				
-				/*
-				 * 没有发送成功
-				 */
 				//保存到服务器上	
 				ChatTool.saveOnServer(from, to,msgText);
 			}
