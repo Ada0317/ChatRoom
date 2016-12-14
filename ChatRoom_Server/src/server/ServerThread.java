@@ -15,6 +15,7 @@ public class ServerThread extends Thread {
 	private OutputStream ous;
 	private int UserJK;
 	private boolean is_Online = false;
+	private UserModel model;
 
 	public int getUserJK() {
 		return UserJK;
@@ -65,7 +66,9 @@ public class ServerThread extends Thread {
 	 * 该方法用于处理从客户端传过来的信息 (未登录)
 	 */
 	public void processLogin() throws Exception {
-		UserModel model = new UserModel(DBConnection.getInstance());
+		//connect to DataBase
+		model = new UserModel(DBConnection.getInstance());
+		
 		ous = client.getOutputStream();
 		InputStream ins = client.getInputStream();
 		DataInputStream dis = new DataInputStream(ins);
@@ -84,9 +87,7 @@ public class ServerThread extends Thread {
 
 			// 注册用户
 
-			UserInfo newuser = model.createUser(mr.getPwd(), mr.getNikeName(), 1234);
-//			newuser.setNickName(mr.getNikeName());
-//			newuser.setPassWord(mr.getPwd());
+			UserInfo newuser = model.createUser(mr.getPwd(), mr.getNikeName(), 1);
 			int JKNum = newuser.getJKNum();
 
 			/*

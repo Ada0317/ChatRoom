@@ -65,11 +65,11 @@ public class ChatClient extends Thread {
 			ous = client.getOutputStream();// 获取该连接的输入输出流
 			return true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Register
 	 * 注册用户
@@ -107,11 +107,12 @@ public class ChatClient extends Thread {
 			}
 
 			MsgRegResp mrr = (MsgRegResp) recMsg;
+			//System.out.println("TestHere"+recMsg.getDest());
 			if (mrr.getState() == 0) {
 				/*
 				 * 注册成功
 				 */
-				System.out.println("注册的JK号为" + mrr.getDest());
+				//System.out.println("注册的JK号为" + mrr.getDest());
 				JOptionPane.showMessageDialog(null, "注册成功\nJK码为" + mrr.getDest());
 				return true;
 			} else {

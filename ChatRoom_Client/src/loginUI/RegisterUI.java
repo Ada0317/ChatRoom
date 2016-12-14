@@ -2,6 +2,8 @@ package loginUI;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -10,10 +12,12 @@ import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import client.ChatClient;
 import object.ExitButton;
 import object.MinimizeButton;
 import object.RecButton;
@@ -30,11 +34,12 @@ public class RegisterUI extends JFrame {
 	private JPanel contentPane;
 	private JTextField password;
 	private JTextField NikeName;
+	private JFrame regframe = this;
 
 	/**
 	 * Create the frame.
 	 */
-	public RegisterUI(LoginAction la) {
+	public RegisterUI(LoginAction la,ChatClient cc) {
 
 		// 设置无标题栏
 		setUndecorated(true);
@@ -88,7 +93,7 @@ public class RegisterUI extends JFrame {
 		password.setBorder(null);
 		password.setBounds(176, 219, 219, 35);
 		contentPane.add(password);
-		la.setRpassword(password);
+		//a.setRpassword(password);
 
 		// 设置自制按钮
 		ExitButton eb = new ExitButton();
@@ -119,10 +124,10 @@ public class RegisterUI extends JFrame {
 		NikeName.setBounds(176, 173, 219, 35);
 		NikeName.setBorder(null);
 		contentPane.add(NikeName);
-		la.setNikeName(NikeName);
+		//la.setNikeName(NikeName);
 
 		JLabel lbljk = new JLabel(
-				"*\u63D0\u793A\uFF1A\u5F53\u6CE8\u518C\u6210\u529F\uFF0C\u5C06\u8FD4\u56DE\u552F\u4E00\u7684JK\u7801\uFF0C\u8BF7\u59A5\u5584\u4FDD\u7BA1\u3002");
+				"*提示：当注册成功，将返回唯一的JK码，请妥善保管。");
 		lbljk.setForeground(Color.WHITE);
 		lbljk.setFont(new Font("微软雅黑", Font.PLAIN, 15));
 		lbljk.setBounds(37, 268, 372, 28);
@@ -131,7 +136,20 @@ public class RegisterUI extends JFrame {
 		RecButton btnRegister = new RecButton("Register Now");
 		btnRegister.setBounds(37, 328, 206, 42);
 		contentPane.add(btnRegister);
-		btnRegister.addActionListener(la);
+		btnRegister.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				//System.out.println("One click");
+				if (!cc.Reg(NikeName.getText(), password.getText())) {
+					JOptionPane.showMessageDialog(null, "注册失败", "Error", JOptionPane.ERROR_MESSAGE);
+				} else {
+					regframe.dispose();
+					la.setIs_Registering(false);// 可以打开注册窗口
+				}
+			}
+		});
 
 		JLabel lblRegisterNewUser = new JLabel("Register New User");
 		lblRegisterNewUser.setForeground(Color.WHITE);
@@ -146,8 +164,6 @@ public class RegisterUI extends JFrame {
 		label_1.setBounds(37, 20, 165, 35);
 		contentPane.add(label_1);
 		setResizable(false);
-		btnRegister.addActionListener(la);
-
 		setVisible(true);
 	}
 }

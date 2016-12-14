@@ -27,11 +27,10 @@ public class LoginAction implements ActionListener {
 
 	private JTextField userid_field;// Login界面的ID号
 	private JPasswordField password_field;// Login界面的密码
-	private JTextField NikeName;// Register界面的昵称
-	private JTextField Rpassword;// Register界面的密码
+//	private JTextField NikeName;// Register界面的昵称
+//	private JTextField Rpassword;// Register界面的密码
 	private ChatClient cc; //LoginUI传过来的用于连接服务器的ChatClient
-	//private RegisterUI ru;
-	//private boolean is_Registering = false;// 这个参数用于判断是否已经打开了注册界面
+	private boolean is_Registering = false;// 这个参数用于判断是否已经打开了注册界面
 	public static JFrame LoginJF;//登陆界面以及注册界面的JF 用于关闭窗口
 
 	public ChatClient getCc() {
@@ -58,20 +57,12 @@ public class LoginAction implements ActionListener {
 		this.password_field = password;
 	}
 
-	public JTextField getNikeName() {
-		return NikeName;
+	public boolean isIs_Registering() {
+		return is_Registering;
 	}
 
-	public void setNikeName(JTextField nikeName) {
-		NikeName = nikeName;
-	}
-
-	public JTextField getRpassword() {
-		return Rpassword;
-	}
-
-	public void setRpassword(JTextField rpassword) {
-		Rpassword = rpassword;
+	public void setIs_Registering(boolean is_Registering) {
+		this.is_Registering = is_Registering;
 	}
 
 	/**
@@ -101,21 +92,13 @@ public class LoginAction implements ActionListener {
 			}
 		} 
 		//若按下的按键为注册按键
-		/*
 		else if (jb.getText().equals("Register")) {
+			//System.out.println("One click");
 			if (!is_Registering) {
-				ru = new RegisterUI(this); // 将当前监听器传过去
+				new RegisterUI(this,cc); // 将当前监听器传过去
 				is_Registering = true;
 			}
-		} else if (jb.getText().equals("注册")) {
-			if (!cc.Reg(NikeName.getText(), Rpassword.getText())) {
-				JOptionPane.showMessageDialog(null, "注册失败", "Error", JOptionPane.ERROR_MESSAGE);
-			} else {
-				ru.dispose();
-				is_Registering = false;// 可以打开注册窗口
-			}
 		}
-		*/
 	}
 
 }

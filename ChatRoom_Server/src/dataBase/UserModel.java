@@ -145,27 +145,32 @@ public class UserModel {
     
     /*
     public static void main(String args[]) throws SQLException {
-        UserModel model = new UserModel(DBConnection.getInstance());
-        UserInfo user = model.getUserByJK(0);
+//        UserModel model = new UserModel(DBConnection.getInstance());
+//        UserInfo newuser = model.createUser("123", "Zhuzi", 0);
+//        System.out.println(newuser.getJKNum()+newuser.getNickName());
+//        UserInfo user = model.getUserByJK(0);
+//        
+//        String userName = user.getNickName();
+//		int pic = user.getAvatar();
+//		String[] listName = user.getListName();
+//		byte listCount = user.getCollectionCount();
+//		byte[] bodyCount = user.getBodyCount();
+//		String[][] bodyName = user.getBodyName();
+//		
+//		for(int i = 0; i<listCount;i++){
+//			System.out.println(listName[i]);
+//			for(int j = 0; j<bodyCount[i];j++){
+//				System.out.println(bodyName[i][j]);
+//			}
+//		}
+    	
+    	
+    	
         
-        String userName = user.getNickName();
-		int pic = user.getAvatar();
-		String[] listName = user.getListName();
-		byte listCount = user.getCollectionCount();
-		byte[] bodyCount = user.getBodyCount();
-		String[][] bodyName = user.getBodyName();
-		
-		for(int i = 0; i<listCount;i++){
-			System.out.println(listName[i]);
-			for(int j = 0; j<bodyCount[i];j++){
-				System.out.println(bodyName[i][j]);
-			}
-		}
-        
-        //List<UserInfo> testlist = model.getUsersInCollection(0);
-        //for(int i = 0; i < testlist.size();i++){
-        //	System.out.println(testlist.get(i).getNickName());
-        //}
+//        List<UserInfo> testlist = model.getUsersInCollection(0);
+//        for(int i = 0; i < testlist.size();i++){
+//        	System.out.println(testlist.get(i).getNickName());
+//        }
         
         
         
