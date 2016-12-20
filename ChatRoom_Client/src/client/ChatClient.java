@@ -207,6 +207,54 @@ public class ChatClient extends Thread {
 		return list;
 	}
 	
+	
+	/*
+	 * 这个方法用于添加好友
+	 * 
+	 */
+	public boolean addFriend(int add_id,String list_name) throws IOException{
+		MsgAddFriend maf = new MsgAddFriend();
+		byte data[] = list_name.getBytes();
+		int TotalLen = 17;
+		TotalLen += data.length;
+		byte type = 0x05;
+		maf.setTotalLen(TotalLen);
+		maf.setType(type);
+		maf.setDest(Figures.ServerJK);
+		maf.setSrc(OwnJKNum);
+		maf.setAdd_ID(add_id);
+		maf.setList_name(list_name);
+		byte[] sendMsg = PackageTool.packMsg(maf);
+		ous.write(sendMsg);
+		
+		//接收服务器的反馈信息
+		byte[] resp = receiveMsg();
+		// 将数组转换为类
+		MsgHead recMsg = ParseTool.parseMsg(resp);
+		if (recMsg.getType() != 0x55) {// 不是登陆反馈信息
+			System.out.println("通讯协议错误");
+			return false;
+		}
+		MsgAddFriendResp mafr = (MsgAddFriendResp) recMsg;
+		byte resp_state = mafr.getState();
+		if(resp_state == 0x00){
+			System.out.println("添加成功");
+			return true;
+		}
+		else if(resp_state == 0x01){
+			System.out.println("查无此人");
+			return false;
+		}
+		else if(resp_state == 0x02) {
+			System.out.println("未知错误");
+			return false;
+		}
+		else{
+			System.out.println("通讯协议错误");
+		}
+		return false;
+	}
+	
 	/**
 	 * sendMsg
 	 * 发送信息
@@ -245,11 +293,7 @@ public class ChatClient extends Thread {
 		return data;
 	}
 
-	
-	/*
-	 * 
-	 */
-	
+
 	
 	/**
 	 * processMsg
