@@ -1,19 +1,19 @@
-//package dataBase;
+package dataBase;
 //
 //import java.util.ArrayList;
 //import java.util.List;
-//
-///*
-// * 用户数据库
-// * 用一个list保存用户信息
-// */
-//public class UserDB {
+
+/*
+ * 用户数据库
+ * 用一个list保存用户信息
+ */
+public class UserDB {
 //	public static List<UserInfo> userDB = new ArrayList<UserInfo>();
-//
-//	/*
-//	 * 用于测试用户界面
-//	 */
-//	static {
+
+	/*
+	 * 用于测试用户界面
+	 */
+	static {
 //		/*
 //		 * 测试用户1
 //		 * JK 0
@@ -81,7 +81,7 @@
 //		user.setNikeName(nikeName);
 //
 //		userDB.add(user);
-//
-//
-//	}
-//}
+
+
+	}
+}
