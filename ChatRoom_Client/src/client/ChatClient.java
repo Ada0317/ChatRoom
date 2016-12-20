@@ -245,6 +245,12 @@ public class ChatClient extends Thread {
 		return data;
 	}
 
+	
+	/*
+	 * 
+	 */
+	
+	
 	/**
 	 * processMsg
 	 * 接受服务器传来的消息
