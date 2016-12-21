@@ -32,8 +32,10 @@ public class CollectionInfo {
      */
     public List<UserInfo> getMembers() throws Exception {
         if (members == null) {
-            UserModel userModel = new UserModel(DBConnection.getInstance());
+            DBConnection conn = DBConnection.getInstance();
+            UserModel userModel = new UserModel(conn);
             members = userModel.getUsersInCollection(id);
+            conn.close();
         }
         return members;
     }

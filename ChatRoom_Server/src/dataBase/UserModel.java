@@ -16,8 +16,8 @@ public class UserModel {
 
     /**
      * getUserByJK
-     * ¸ù¾ÝJKºÅ»ñÈ¡UserInfo¶ÔÏó
-     * °üÀ¨ÓÃ»§»ù±¾ÊôÐÔÒÔ¼°ºÃÓÑÁÐ±í
+     * ï¿½ï¿½ï¿½ï¿½JKï¿½Å»ï¿½È¡UserInfoï¿½ï¿½ï¿½ï¿½
+     * ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
      * @param JK
      * @return UserInfo user
      * @throws SQLException
@@ -42,10 +42,10 @@ public class UserModel {
 		user.setCollectionCount((byte) collectionCount);
 		
 		String[] ListName = new String[collectionCount];
-		byte[] bodyCount = new byte[collectionCount];// Ã¿×éÓÐ¶àÉÙ¸öÈË
-		int bodyNum[][] = new int[collectionCount][];// Ã¿¸öºÃÓÑµÄJKºÅ
-		int bodypic[][] = new int[collectionCount][];//ºÃÓÑÍ·Ïñ
-		String bodyName[][] = new String[collectionCount][];// Ã¿¸öºÃÓÑµÄêÇ³Æ
+		byte[] bodyCount = new byte[collectionCount];// Ã¿ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½Ù¸ï¿½ï¿½ï¿½
+		int bodyNum[][] = new int[collectionCount][];// Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Ñµï¿½JKï¿½ï¿½
+		int bodypic[][] = new int[collectionCount][];//ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½
+		String bodyName[][] = new String[collectionCount][];// Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Ñµï¿½ï¿½Ç³ï¿½
 		
         for(int j = 0; j<coll.size();j++){
         	try {
@@ -83,7 +83,7 @@ public class UserModel {
     
     /**
      * userAuthorization
-     * ÑéÖ¤ÓÃ»§ÃÜÂë
+     * ï¿½ï¿½Ö¤ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½
      * @param jk
      * @param passwd
      * @return boolean Result
@@ -116,7 +116,7 @@ public class UserModel {
 
     /**
      * createUser
-     * ´´½¨¶ÔÏó
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      * @param passwd
      * @param nick
      * @param avatar
@@ -131,7 +131,7 @@ public class UserModel {
     
     /**
      * removeUser
-     * É¾³ý¶ÔÏó
+     * É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      * @param jk
      * @return
      * @throws SQLException

@@ -1,5 +1,9 @@
 package msg;
 
+import dataBase.Figures;
+import dataBase.ThreadDB;
+import dataBase.UserInfo;
+
 public class MsgTeamList extends MsgHead {
 	private String UserName;
 	private int pic;
@@ -10,6 +14,48 @@ public class MsgTeamList extends MsgHead {
 	private int bodyPic[][];
 	private String nikeName[][];
 	private byte bodyState[][];
+
+	public MsgTeamList(UserInfo user) {
+		setType((byte)0x03);
+		setDest(user.getJKNum());
+		setSrc(Figures.ServerJK);
+		setUserName(user.getNickName());
+		setPic(user.getAvatar());
+		setListCount(user.getCollectionCount());
+		setListName(user.getListName());
+		setBodyCount(user.getBodyCount());
+		setBodyNum(user.getBodyNum());
+		setBodyPic(user.getBodypic());
+		setNikeName(user.getBodyName());
+		int len = 13;
+		len += 10; // userName
+		len += 4;  //pic
+		len += 1; // listCount
+		len += (10 * listCount); // listName
+		len += listCount; // bodyCount
+		bodyState = new byte[listCount][];
+
+		for (int i = 0; i < listCount; i++) {
+			len += bodyCount[i] * 19; // 每个好友长度为19
+
+			bodyState[i] = new byte[bodyCount[i]];
+		}
+		/*
+		 * 检查好友在线状态 实现方法 去线程数据库看看是不是存在同样JKNUM的线程
+		 */
+
+		for (int i = 0; i < listCount; i++) {
+			for (int j = 0; j < bodyCount[i]; j++) {
+				if (ThreadDB.threadDB.containsKey(String.valueOf(bodyNum[i][j]))) {
+					bodyState[i][j] = 0;
+				} else {
+					bodyState[i][j] = 1;
+				}
+			}
+		}
+		setTotalLen(len);
+
+	}
 
 	public String getUserName() {
 		return UserName;

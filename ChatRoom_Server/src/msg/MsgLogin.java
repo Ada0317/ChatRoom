@@ -13,4 +13,5 @@ public class MsgLogin extends MsgHead {
 	public void setPwd(String pwd) {
 		this.pwd = pwd;
 	}
+
 }

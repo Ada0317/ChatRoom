@@ -67,15 +67,16 @@ public class ServerThread extends Thread {
 	 */
 	public void processLogin() throws Exception {
 		//connect to DataBase
-		model = new UserModel(DBConnection.getInstance());
+		DBConnection conn = DBConnection.getInstance();
+		model = new UserModel(conn);
 		
 		ous = client.getOutputStream();
 		InputStream ins = client.getInputStream();
 		DataInputStream dis = new DataInputStream(ins);
-		int totalLen = dis.readInt();
-		byte[] data = new byte[totalLen - 4];
-		dis.readFully(data);
-		MsgHead msg = ParseTool.parseMsg(data);// 解包该信息
+//		int totalLen = dis.readInt();
+//		byte[] data = new byte[totalLen - 4];
+//		dis.readFully(data);
+		MsgHead msg = MsgHead.readMessageFromStream(dis);
 
 		/*
 		 * 下面是针对不同的信息进行处理
@@ -87,156 +88,51 @@ public class ServerThread extends Thread {
 
 			// 注册用户
 
-			UserInfo newuser = model.createUser(mr.getPwd(), mr.getNikeName(), 1);
-			int JKNum = newuser.getJKNum();
+			UserInfo newUser = model.createUser(mr.getPwd(), mr.getNikeName(), 1);
+			int JKNum = newUser.getJKNum();
 
 			/*
 			 * 服务器准备返回信息
 			 */
-
-			MsgRegResp mrr = new MsgRegResp();
-			int Len = 14;// MsgRegResp的长度为14
-			byte msgtype = 0x11;// MsgRegResp的类型为0x11
 			byte state = 0;
-
-			// 设置MsgRegResp的各个参数
-			mrr.setTotalLen(Len);
-			mrr.setType(msgtype);
-			mrr.setDest(JKNum); // MsgRegResp的Dest是注册好的JK号
-			mrr.setSrc(Figures.ServerJK); // 服务器的JK号
-			mrr.setState(state);
-
-			// 写入流中
-			byte[] sendmsg = PackageTool.packMsg(mrr);// 将传输的信息打包
-			ous.write(sendmsg);
-			ous.flush();
-
+			MsgRegResp mrr = new MsgRegResp(JKNum, state);
+            mrr.send(ous);
 		}
 
 		// 如果传过来是登陆信息
 		else if (msg.getType() == 0x02) {
 			MsgLogin ml = (MsgLogin) msg;
-			byte checkmsg;// 用来保存状态信息
-
-			// DAO验证用户是否存在
-			System.out.println(model.userAuthorization(ml.getSrc(), ml.getPwd()));
-			if (model.userAuthorization(ml.getSrc(), ml.getPwd())) {// 如果验证了用户存在
-				checkmsg = 0;
-			} else {
-				checkmsg = 1;
-			}
+			boolean userChecked = model.userAuthorization(ml.getSrc(), ml.getPwd());
 
 			/*
 			 * 服务器准备返回信息
 			 */
-			MsgLoginResp mlr = new MsgLoginResp();
-			int len = 14;
-			byte msgtype = 0x22;
+			MsgLoginResp mlr = new MsgLoginResp(userChecked);
+			mlr.send(ous);
 
-			// 设置resp的各个参数
-			mlr.setTotalLen(len);
-			mlr.setType(msgtype);
-			mlr.setDest(Figures.LoginJK);
-			mlr.setSrc(Figures.ServerJK);
-			mlr.setState(checkmsg);
-
-			// 写入流中
-			byte[] sendmsg = PackageTool.packMsg(mlr);// 将传输的信息打包
-			ous.write(sendmsg);
-			ous.flush();
-
-			
-			
 			/*
 			 * 如果登陆操作完成， 发送好友列表
 			 */
-			if (checkmsg == 0) {
+			if (userChecked) {
 				UserJK = ml.getSrc();
 				ThreadRegDelTool.RegThread(this); // 向线程数据库中注册这个线程
 				UserInfo user = model.getUserByJK(ml.getSrc());
-				msgtype = 0x03;
-				String userName = user.getNickName();
-				int pic = user.getAvatar();
-				byte listCount = user.getCollectionCount();
-				byte[] bodyCount = user.getBodyCount();
-				byte[][] bodyState;
-				int[][] BodyNum = user.getBodyNum();
-				int[][] BodyPic = user.getBodypic();
-				/*
-				 * 计算长度
-				 */
-				int i, j;
-
-				len = 13; // 信息头长度
-				len += 10; // userName
-				len += 4;  //pic
-				len += 1; // listCount
-				len += (10 * listCount); // listName
-				len += listCount; // bodyCount
-
-				bodyState = new byte[listCount][];
-
-				for (i = 0; i < listCount; i++) {
-					len += bodyCount[i] * 19; // 每个好友长度为19
-
-					bodyState[i] = new byte[bodyCount[i]];
-				}
-
-				/*
-				 * 检查好友在线状态 实现方法 去线程数据库看看是不是存在同样JKNUM的线程
-				 */
-
-				for (i = 0; i < listCount; i++) {
-					for (j = 0; j < bodyCount[i]; j++) {
-						if (ThreadDB.threadDB.containsKey(String.valueOf(BodyNum[i][j]))) {
-							bodyState[i][j] = 0;
-						} else {
-							bodyState[i][j] = 1;
-						}
-					}
-				}
-
-				// 设置mtl的各个参数
-				MsgTeamList mtl = new MsgTeamList();
-				mtl.setTotalLen(len);
-				mtl.setType(msgtype);
-				mtl.setDest(ml.getSrc());
-				mtl.setSrc(Figures.ServerJK);
-				mtl.setUserName(userName);
-				mtl.setPic(pic);
-				mtl.setListCount(listCount);
-				mtl.setListName(user.getListName());
-				mtl.setBodyCount(bodyCount);
-				mtl.setBodyNum(BodyNum);
-				mtl.setBodyPic(BodyPic);
-				mtl.setNikeName(user.getBodyName());
-				mtl.setBodyState(bodyState);
-
-
-				// 写入流中
-				sendmsg = PackageTool.packMsg(mtl);
-				
-				ous.write(sendmsg);
-				ous.flush();
+				MsgTeamList mtl = new MsgTeamList(user);
+				mtl.send(ous);
 				is_Online = true;// 设置已登录客户端
 			}
 
 		}
+		conn.close();
 
 	}
-
 	/*
 	 * 该方法用于处理从客户端传过来的信息 (已登录)
 	 */
 	public void processChat() throws Exception {
 		InputStream ins = client.getInputStream();
 		DataInputStream dis = new DataInputStream(ins);
-		
-		int totalLen = dis.readInt();
-		byte[] data = new byte[totalLen - 4];
-		dis.readFully(data);
-		MsgHead msg = ParseTool.parseMsg(data);// 解包该信息
-
+		MsgHead msg = MsgHead.readMessageFromStream(dis);
 		/*
 		 * 下面是针对不同的信息进行处理
 		 */
@@ -253,7 +149,7 @@ public class ServerThread extends Thread {
 				System.out.println("SaveOnServer");
 				
 				//保存到服务器上	
-				ChatTool.saveOnServer(from, to,msgText);
+				ChatTool.saveOnServer(from, to, msgText);
 			}
 		}
 

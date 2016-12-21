@@ -10,7 +10,7 @@ class ConnectionImpl extends DBConnection {
     ConnectionImpl() {
         try {
             Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection("jdbc:sqlite:./db/test.db");
+            conn = DriverManager.getConnection("jdbc:sqlite:ChatRoom_Server/db/test.db");
         } catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
             System.exit(0);
@@ -21,18 +21,17 @@ class ConnectionImpl extends DBConnection {
 
 public abstract class DBConnection {
 
-    private static DBConnection ref = null;
-
     protected Connection conn;
 
     public static DBConnection getInstance() {
-        if (ref == null) {
-            ref = new ConnectionImpl();
-        }
-        return ref;
+        return new ConnectionImpl();
     }
 
-    public ResultSet query (String sql) throws SQLException  {
+    public void close() throws SQLException {
+        conn.close();
+    }
+
+    public ResultSet query (String sql) throws SQLException {
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
 

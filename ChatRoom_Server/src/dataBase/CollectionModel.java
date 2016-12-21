@@ -68,7 +68,7 @@ public class CollectionModel {
         return result;
     }
     public CollectionInfo getCollectionByNameAndOwner(String name, int jk) throws SQLException {
-        String sql = String.format("SELECT * FROM collection where user_id=%d AND name=`%s`", jk, name);
+        String sql = String.format("SELECT * FROM collection where user_id=%d AND name='%s'", jk, name);
         ResultSet rs = connection.query(sql);
         CollectionInfo result = new CollectionInfo(rs);
         rs.close();
