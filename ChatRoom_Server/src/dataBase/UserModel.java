@@ -165,8 +165,8 @@ public class UserModel {
         CollectionInfo collection;
         for(int j = 0; j<coll.size();j++){
         	collection = coll.get(j);
-        	for(int i = 0; i<collection.getMembers().size();i++){
-        		if(collection.getMembers().get(i).getJKNum()==add_jk);
+        	for(int i = 0; i<collection.getMembers().size(); i++){
+        		if(collection.getMembers().get(i).getJKNum()==add_jk)
         			return 2;
 			}
         }
@@ -184,7 +184,6 @@ public class UserModel {
         	ci = collectionModel.createCollection(own_jk, list_name);
         }
     	if(ci != null){
-    		List<UserInfo> mylist = ci.getMembers();
     		// this part can be done in client
     		// add to collection
     		collectionModel.addUserToCollection(add_jk, ci.getId());

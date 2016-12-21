@@ -381,11 +381,11 @@ public class ChatClient extends Thread {
 //		ChatClient cc = new ChatClient("localhost", 9090);
 //		if (cc.ConnectServer()) {
 //			System.out.println("连接服务器完成");
-//			int result = cc.Login(0, "123");
+//			int result = cc.Login(12, "123");
 //			if (result==0){
 //				System.out.println("登陆测试成功");
 //				cc.printList(cc.getlist());
-//				result = cc.addFriend(1, "新的列表");
+//				result = cc.addFriend(5, "新的列表");
 //				System.out.println(result);
 //			} else {
 //				System.out.println("登陆失败");
