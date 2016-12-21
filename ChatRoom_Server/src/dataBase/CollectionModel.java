@@ -67,13 +67,28 @@ public class CollectionModel {
         rs.close();
         return result;
     }
+    
+    /**
+     * 
+     * @param name
+     * @param jk
+     * @return
+     * @throws SQLException
+     */
     public CollectionInfo getCollectionByNameAndOwner(String name, int jk) throws SQLException {
         String sql = String.format("SELECT * FROM collection where user_id=%d AND name='%s'", jk, name);
         ResultSet rs = connection.query(sql);
-        CollectionInfo result = new CollectionInfo(rs);
+        CollectionInfo result = null;
+        if(!rs.next()){
+        	System.out.println("NULL");
+        }
+        else{
+        	result = new CollectionInfo(rs);
+        }
         rs.close();
         return result;
     }
+    
     /**
      * removeCollection
      * @param id
@@ -105,24 +120,39 @@ public class CollectionModel {
     public List<CollectionInfo> getCollectionsByUser(int jk) throws SQLException {
         return getColletionsByJK(jk);
     }
-    /*
-    public static void main(String args[]) throws SQLException {
-        DBConnection db = DBConnection.getInstance();
-        //UserModel userModel = new UserModel(db);
-        CollectionModel collectionModel = new CollectionModel(db);
-        //UserInfo user = userModel.getUserByJK(0);
-        List<CollectionInfo>  coll = collectionModel.getColletionsByJK(0);
-		List<UserInfo> testlist;
-        for(int j = 0; j<coll.size();j++){
-        	try {
-        		System.out.println(coll.get(j).toString());
-				testlist = coll.get(j).getMembers();
-				for(int i = 0; i < testlist.size();i++){
-		        	System.out.println(testlist.get(i).getNickName());
-		        }
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-        }
-    }*/
+    
+//    public static void main(String args[]) throws SQLException {
+//        DBConnection db = DBConnection.getInstance();
+//        
+//        //UserModel userModel = new UserModel(db);
+//        CollectionModel collectionModel = new CollectionModel(db);
+//        //UserInfo user = userModel.getUserByJK(0);
+//        /*
+//        List<CollectionInfo>  coll = collectionModel.getColletionsByJK(0);
+//		List<UserInfo> testlist;
+//        for(int j = 0; j<coll.size();j++){
+//        	try {
+//        		System.out.println(coll.get(j).toString());
+//				testlist = coll.get(j).getMembers();
+//				for(int i = 0; i < testlist.size();i++){
+//		        	System.out.println(testlist.get(i).getNickName());
+//		        }
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//        }*/
+//     
+//        CollectionInfo ci = collectionModel.getCollectionByNameAndOwner("ÎÒµÄºÃÓÑ", 0);
+//        List<UserInfo> testlist;
+//		try {
+//			testlist = ci.getMembers();
+//			System.out.println(ci.getId()+"  "+ci.getName());
+//		    for(int i = 0; i< testlist.size();i++){
+//		        System.out.println(testlist.get(i).getNickName());
+//		    }
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//    }
 }
