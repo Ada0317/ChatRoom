@@ -39,6 +39,7 @@ public class ServerThread extends Thread {
 				 */
 				System.out.println(client.getRemoteSocketAddress() + "已断开");
 				is_Online = false;
+				
 				try {
 					client.close();
 				} catch (IOException e1) {
@@ -47,8 +48,6 @@ public class ServerThread extends Thread {
 				break;
 			}
 		}
-		RefreshThread rt = new RefreshThread(this);
-		rt.start();
 		while (is_Online) { // 该线程中客户端已登陆
 			//开始更新列表
 			try {
@@ -60,6 +59,12 @@ public class ServerThread extends Thread {
 				System.out.println(client.getRemoteSocketAddress() + "已断开");
 				ThreadRegDelTool.DelThread(UserJK);// 从线程数据库中间删除这条信息
 				is_Online = false;
+				try {
+					broadcastState();
+				} catch (SQLException | IOException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
 				try {
 					client.close();
 				} catch (IOException e1) {
@@ -175,12 +180,23 @@ public class ServerThread extends Thread {
 				ThreadRegDelTool.RegThread(this); // 向线程数据库中注册这个线程
 				SendFriendList();
 				is_Online = true;// 设置已登录客户端
+				broadcastState();
 			}
-
 		}
-
 	}
 	
+	
+	public void broadcastState() throws SQLException, IOException{
+		UserInfo user = model.getUserByJK(UserJK);
+		for(int i = 0; i< user.getCollectionCount();i++){
+			for(int j = 0; j<user.getBodyCount()[i];j++){
+				ServerThread st = ThreadDB.threadDB.get(String.valueOf(user.getBodyNum()[i][j]));
+				if(st != null ) {
+					st.SendFriendList();
+				}
+			}
+		}
+	}
 	
 	/*
 	 * 该方法用于处理从客户端传过来的信息 (已登录)
@@ -255,13 +271,17 @@ public class ServerThread extends Thread {
 			
 			//send Add_JK Friend list
 			model.add_friend(own_jk, add_jk, list_name);
+			//给被添加者更新列表
+			ServerThread st = ThreadDB.threadDB.get(String.valueOf(add_jk));
+			if(st != null ) {
+				st.SendFriendList();
+			}
 		}
 
 	}
 	
 	/**
 	 * 发送好友列表
-	 * @param user
 	 * @throws IOException
 	 * @throws SQLException 
 	 */
