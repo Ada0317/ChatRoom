@@ -3,9 +3,7 @@ package msg;
 import tools.PackageTool;
 import tools.ParseTool;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 
 /*
  * 消息头为所有的消息的共用体
@@ -62,9 +60,34 @@ public class MsgHead {
 		return message;
 	}
 	public void send(OutputStream outputStream) throws IOException {
-		byte[] message = PackageTool.packMsg(this);// 将传输的信息打包
+		byte[] message = this.packMessage();// 将传输的信息打包
 		outputStream.write(message);
 		outputStream.flush();
 	}
 
+	protected void packMessageHead(DataOutputStream dous) throws IOException {
+		dous.writeInt(getTotalLen());
+		dous.writeByte(getType());
+		dous.writeInt(getDest());
+		dous.writeInt(getSrc());
+	}
+	protected void writeString(DataOutputStream dous, int len, String s) throws IOException {
+		byte[] data = s.getBytes();
+		if (data.length > len) {
+			throw new IOException("写入长度超长");
+		}
+		dous.write(data);
+		while (data.length < len) {
+			dous.writeByte('\0');
+			len--;
+		}
+	}
+	public byte[] packMessage() throws IOException {
+		ByteArrayOutputStream bous = new ByteArrayOutputStream();
+		DataOutputStream dous = new DataOutputStream(bous);
+		packMessageHead(dous);
+		dous.flush();
+		byte[] data = bous.toByteArray();
+		return data;
+	}
 }

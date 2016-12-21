@@ -2,6 +2,10 @@ package msg;
 
 import dataBase.Figures;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 /*
  * 此消息体为登陆状态返回
  */
@@ -16,17 +20,22 @@ public class MsgLoginResp extends MsgHead {
 
 	private byte state;
 
-	public MsgLoginResp(boolean check) {
+	public MsgLoginResp() {}
+	public MsgLoginResp(byte checkmsg) {
 		setTotalLen(14);
 		setType((byte)0x22);
 		setDest(Figures.LoginJK);
 		setSrc(Figures.ServerJK);
-		byte state = 1;
-		if (check) {
-			state = 0;
-		}
-		setState(state);
+		setState(checkmsg);
 	}
-
+	public byte[] packMessage() throws IOException {
+		ByteArrayOutputStream bous = new ByteArrayOutputStream();
+		DataOutputStream dous = new DataOutputStream(bous);
+		packMessageHead(dous);
+		dous.write(getState());
+		dous.flush();
+		byte[] data = bous.toByteArray();
+		return data;
+	}
 
 }

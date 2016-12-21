@@ -33,10 +33,8 @@ public class ChatTool {
 		}
 		
 		try {
-			st.SendMsg(from, msg);
-
+			st.sendMsg(from, msg);
 //			System.out.println("Finish Sendding");
-			
 			return true;
 			
 		} catch (IOException e) {

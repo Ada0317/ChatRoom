@@ -3,6 +3,10 @@ package msg;
 
 import dataBase.Figures;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 /*
  * 服务器应答注册状态消息体
  */
@@ -25,6 +29,16 @@ public class MsgRegResp extends MsgHead {
 		setDest(jkDest);
 		setSrc(Figures.ServerJK);
 		setState(state);
+	}
+	@Override
+	public byte[] packMessage() throws IOException {
+		ByteArrayOutputStream bous = new ByteArrayOutputStream();
+		DataOutputStream dous = new DataOutputStream(bous);
+		packMessageHead(dous);
+		dous.write(getState());
+		dous.flush();
+		byte[] data = bous.toByteArray();
+		return data;
 	}
 
 }

@@ -4,6 +4,10 @@ import dataBase.Figures;
 import dataBase.ThreadDB;
 import dataBase.UserInfo;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class MsgTeamList extends MsgHead {
 	private String UserName;
 	private int pic;
@@ -14,7 +18,7 @@ public class MsgTeamList extends MsgHead {
 	private int bodyPic[][];
 	private String nikeName[][];
 	private byte bodyState[][];
-
+	public MsgTeamList() {}
 	public MsgTeamList(UserInfo user) {
 		setType((byte)0x03);
 		setDest(user.getJKNum());
@@ -125,6 +129,41 @@ public class MsgTeamList extends MsgHead {
 
 	public void setBodyPic(int bodyPic[][]) {
 		this.bodyPic = bodyPic;
+	}
+
+	@Override
+	public byte[] packMessage() throws IOException {
+		ByteArrayOutputStream bous = new ByteArrayOutputStream();
+		DataOutputStream dous = new DataOutputStream(bous);
+		packMessageHead(dous);
+		// 从mtl中获取信息
+		String userName = getUserName();
+		int pic = getPic();
+		byte listCount = getListCount();
+		String listName[] = getListName();
+		byte bodyCount[] = getBodyCount();
+		int bodyNum[][] = getBodyNum();
+		int bodyPic[][] = getBodyPic();
+		String nikeName[][] = getNikeName();
+		byte bodyState[][] = getBodyState();
+
+		// 开始写入流中
+		writeString(dous, 10, userName);
+		dous.writeInt(pic);
+		dous.write(listCount);// 分组个数
+		for (int i = 0; i < listCount; i++) {
+			writeString(dous, 10, listName[i]);
+			dous.write(bodyCount[i]);
+			for (int j = 0; j < bodyCount[i]; j++) {// 每个组里面
+				dous.writeInt(bodyNum[i][j]);
+				dous.writeInt(bodyPic[i][j]);
+				writeString(dous, 10, nikeName[i][j]);
+				dous.write(bodyState[i][j]);
+			}
+		}
+		dous.flush();
+		byte[] data = bous.toByteArray();
+		return data;
 	}
 
 }

@@ -13,13 +13,13 @@ public class CollectionModel {
     }
     
     /**
-     * getColletionsByJK
+     * getCollectionsByJK
      * 根据用户的JK号获取collectionInfo 的list
      * @param jk JK号
      * @return List<CollectionInfo>
      * @throws SQLException SQL异常
      */
-    public List<CollectionInfo> getColletionsByJK(int jk) throws SQLException {
+    public List<CollectionInfo> getCollectionsByJK(int jk) throws SQLException {
         ResultSet rs = connection.query("SELECT * FROM collection where user_id=" + jk);
         ArrayList<CollectionInfo> res = new ArrayList<>();
         while (rs.next()) {
@@ -63,9 +63,17 @@ public class CollectionModel {
     public CollectionInfo getCollection(int id) throws SQLException {
         String sql = String.format("SELECT * FROM collection where collection_id=%d", id);
         ResultSet rs = connection.query(sql);
+        if (!rs.next()) {
+            return null;
+        }
         CollectionInfo result = new CollectionInfo(rs);
         rs.close();
         return result;
+    }
+
+    public boolean isUserInCollection(int userJK, int collectionId) throws SQLException {
+        ResultSet rs = connection.query(String.format("SELECT * FROM collection_entry where user_id=%d AND collection_id=%d", userJK, collectionId));
+        return rs.next();
     }
     
     /**
@@ -78,13 +86,10 @@ public class CollectionModel {
     public CollectionInfo getCollectionByNameAndOwner(String name, int jk) throws SQLException {
         String sql = String.format("SELECT * FROM collection where user_id=%d AND name='%s'", jk, name);
         ResultSet rs = connection.query(sql);
-        CollectionInfo result = null;
-        if(!rs.next()){
-        	System.out.println("NULL");
+        if (!rs.next()) {
+            return null;
         }
-        else{
-        	result = new CollectionInfo(rs);
-        }
+        CollectionInfo result = new CollectionInfo(rs);
         rs.close();
         return result;
     }
@@ -108,7 +113,7 @@ public class CollectionModel {
      */
     public List<CollectionInfo> getCollectionsByUser(UserInfo user) throws Exception {
         int jk = user.getJKNum();
-        return getColletionsByJK(jk);
+        return getCollectionsByJK(jk);
     }
     
     /**
@@ -118,7 +123,7 @@ public class CollectionModel {
      * @throws SQLException
      */
     public List<CollectionInfo> getCollectionsByUser(int jk) throws SQLException {
-        return getColletionsByJK(jk);
+        return getCollectionsByJK(jk);
     }
     
 //    public static void main(String args[]) throws SQLException {
@@ -128,7 +133,7 @@ public class CollectionModel {
 //        CollectionModel collectionModel = new CollectionModel(db);
 //        //UserInfo user = userModel.getUserByJK(0);
 //        /*
-//        List<CollectionInfo>  coll = collectionModel.getColletionsByJK(0);
+//        List<CollectionInfo>  coll = collectionModel.getCollectionsByJK(0);
 //		List<UserInfo> testlist;
 //        for(int j = 0; j<coll.size();j++){
 //        	try {
