@@ -141,7 +141,56 @@ public class UserModel {
         int res = db.update(sql);
         return res;
     }
-
+    
+    /**
+     * 
+     * @param jk
+     * @param list_name
+     * @return 1 不存在这个人
+     * @return 2 已经有了
+     * @return 0 成功
+     * @throws Exception 
+     * @author He11o_Liu
+     */
+    public int add_friend(int add_jk, int own_jk, String list_name) throws Exception{
+    	//check add_jk
+    	UserInfo dest = getUserByJK(add_jk);
+    	if (dest == null){
+    		//不存在这个人
+    		return 1;
+    	}
+    	
+        CollectionModel collectionModel = new CollectionModel(db);
+        List<CollectionInfo> coll = collectionModel.getColletionsByJK(own_jk);
+        CollectionInfo collection;
+        for(int j = 0; j<coll.size();j++){
+        	collection = coll.get(j);
+        	for(int i = 0; i<collection.getMembers().size();i++){
+        		if(collection.getMembers().get(i).getJKNum()==add_jk);
+        			return 2;
+			}
+        }
+        
+        
+        
+        
+        
+    	//check list_name
+    	
+    	//find coll_id
+    	CollectionInfo ci = collectionModel.getCollectionByNameAndOwner(list_name, own_jk);
+    	if(ci == null){
+        	//create collection
+        	ci = collectionModel.createCollection(own_jk, list_name);
+        }
+    	if(ci != null){
+    		List<UserInfo> mylist = ci.getMembers();
+    		// this part can be done in client
+    		// add to collection
+    		collectionModel.addUserToCollection(add_jk, ci.getId());
+    	}
+    	return 0;
+    }
     
     /*
     public static void main(String args[]) throws SQLException {
@@ -182,4 +231,43 @@ public class UserModel {
         //System.out.println(model.userAuthorization(0,"123"));
         //model.removeUser(jk);
     }*/
+    
+    
+    public static void main(String args[]) throws SQLException {
+        DBConnection db = DBConnection.getInstance();
+        
+        //UserModel userModel = new UserModel(db);
+        CollectionModel collectionModel = new CollectionModel(db);
+        //UserInfo user = userModel.getUserByJK(0);
+        /*
+        List<CollectionInfo>  coll = collectionModel.getColletionsByJK(0);
+		List<UserInfo> testlist;
+        for(int j = 0; j<coll.size();j++){
+        	try {
+        		System.out.println(coll.get(j).toString());
+				testlist = coll.get(j).getMembers();
+				for(int i = 0; i < testlist.size();i++){
+		        	System.out.println(testlist.get(i).getNickName());
+		        }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        }*/
+     
+        CollectionInfo ci = collectionModel.getCollectionByNameAndOwner("我的好友", 6);
+        List<UserInfo> testlist;
+        if(ci == null){
+        	System.out.println("No such list");
+        }
+		try {
+			testlist = ci.getMembers();
+			System.out.println(ci.getId()+"  "+ci.getName());
+		    for(int i = 0; i< testlist.size();i++){
+		        System.out.println(testlist.get(i).getNickName());
+		    }
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 }

@@ -38,6 +38,7 @@ public class ParseTool {
 		ByteArrayInputStream bins = new ByteArrayInputStream(data);
 		DataInputStream dins = new DataInputStream(bins);
 		byte msgtype = dins.readByte();
+		//System.out.println("Type"+msgtype);
 		int dest = dins.readInt();
 		int src = dins.readInt();
 		if (msgtype == 0x01) {// 如果是注册信息
@@ -180,6 +181,7 @@ public class ParseTool {
 			mafr.setDest(dest);
 			mafr.setSrc(src);
 			mafr.setState(state);
+			return mafr;
 		}
 		
 		return null;

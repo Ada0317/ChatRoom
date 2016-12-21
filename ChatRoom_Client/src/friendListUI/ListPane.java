@@ -17,6 +17,7 @@ public class ListPane extends JPanel {
 	private Member user[][];
 	private byte listCount ;
 	private byte[] bodyCount;
+	private byte[][] state;
 
 	public ListPane(ListInfo list) {
 		super();
@@ -25,13 +26,13 @@ public class ListPane extends JPanel {
 	}
 
 	private void initialize() {
-		 listCount = list.getListCount();
+		listCount = list.getListCount();
 		String[] listName = list.getListName();
 		bodyCount = list.getBodyCount();
 		int[][] bodyNum = list.getBodyNum();
 		int[][] bodyPic = list.getBodypic();
 		String[][] nikeName = list.getNikeName();
-		byte[][] state = list.getBodyState();
+		state = list.getBodyState();
 		ListName[] list = new ListName[listCount];
 		user = new Member[listCount][];
 		int i, j;
@@ -80,5 +81,33 @@ public class ListPane extends JPanel {
 				}
 			}
 		}
+	}
+	
+	public void Refresh_List(ListInfo new_list){
+		byte new_listCount = new_list.getListCount();
+		byte[] new_bodyCount = new_list.getBodyCount();
+		byte[][] state = new_list.getBodyState();
+		boolean has_new_member = false;
+		boolean has_new_list = false;
+		if(new_listCount == listCount){
+			for(int i = 0; i< listCount;i++){
+				if(new_bodyCount[i]!=bodyCount[i]){
+					has_new_member = true;
+					break;
+				}
+				for(int j = 0;j < bodyCount[i];j++){
+					user[i][j].set_state(state[i][j]);
+				}
+			}
+		}
+		else{
+			has_new_list = true;
+		}
+		if(has_new_member || has_new_list){
+			this.removeAll();
+			list = new_list;
+			this.initialize();
+		}
+		
 	}
 }

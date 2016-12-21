@@ -181,6 +181,7 @@ public class ParseTool {
 			mafr.setDest(dest);
 			mafr.setSrc(src);
 			mafr.setState(state);
+			return mafr;
 		}
 		
 		return null;

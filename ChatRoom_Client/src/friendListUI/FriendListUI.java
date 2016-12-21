@@ -45,7 +45,7 @@ public class FriendListUI extends JFrame {
 		// 接收列表信息
 
 		try {
-			user = Figures.cc.getInfo();
+			user = Figures.cc.getlist();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -170,8 +170,6 @@ public class FriendListUI extends JFrame {
 		 * 开启从服务器不间断获取信息
 		 */
 		Figures.cc.start();
-		
-		
 		
 		
 	}
