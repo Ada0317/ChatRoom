@@ -38,6 +38,7 @@ public class ServerThread extends Thread {
 				 * 客户端断开连接
 				 */
 				System.out.println(client.getRemoteSocketAddress() + "已断开");
+				is_Online = false;
 				try {
 					client.close();
 				} catch (IOException e1) {
@@ -46,10 +47,10 @@ public class ServerThread extends Thread {
 				break;
 			}
 		}
+		RefreshThread rt = new RefreshThread(this);
+		rt.start();
 		while (is_Online) { // 该线程中客户端已登陆
 			//开始更新列表
-			RefreshThread rt = new RefreshThread(this);
-			rt.start();
 			try {
 				processChat();
 			} catch (Exception e) {
@@ -58,6 +59,7 @@ public class ServerThread extends Thread {
 				 */
 				System.out.println(client.getRemoteSocketAddress() + "已断开");
 				ThreadRegDelTool.DelThread(UserJK);// 从线程数据库中间删除这条信息
+				is_Online = false;
 				try {
 					client.close();
 				} catch (IOException e1) {
@@ -249,6 +251,8 @@ public class ServerThread extends Thread {
 			
 			ous.flush();
 			
+			SendFriendList();
+			
 			//send Add_JK Friend list
 			model.add_friend(own_jk, add_jk, list_name);
 		}
@@ -303,9 +307,6 @@ public class ServerThread extends Thread {
 				} else {
 					bodyState[i][j] = 1;
 				}
-//				if(BodyNum[i][j]==1){
-//					System.out.println("State"+bodyState[i][j]);
-//				}
 			}
 		}
 
