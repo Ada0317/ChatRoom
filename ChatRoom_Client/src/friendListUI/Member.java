@@ -78,7 +78,7 @@ public class Member extends JLabel {
 		 */
 		lb_JKnum = new JLabel();
 		lb_JKnum.setForeground(Color.WHITE);
-		lb_JKnum.setBounds(new Rectangle(70, 38, 80, 20));
+		lb_JKnum.setBounds(new Rectangle(70, 38, 150, 20));
 		lb_JKnum.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 15));
 		lb_JKnum.setText("JKNum:(" + JKNum + ")");
 

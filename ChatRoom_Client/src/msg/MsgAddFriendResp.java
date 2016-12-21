@@ -10,5 +10,4 @@ public class MsgAddFriendResp extends MsgHead{
 	public void setState(byte state) {
 		this.state = state;
 	}
-	
 }

@@ -56,7 +56,8 @@ public class ListPane extends JPanel {
 		}
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setSize(272, 450);
-		this.setLocation(20, 5);
+//		this.setLocation(20, 5);
+		this.setLocation(0, 0);
 	}
 
 	public UserInfo findUserByJK(int JKNum){
@@ -108,7 +109,7 @@ public class ListPane extends JPanel {
 			this.removeAll();
 			list = new_list;
 			initialize();
-			Figures.flu.updatelist(this);
+			
 		}
 	}
 }

@@ -180,6 +180,7 @@ public class AddFriendUI extends JFrame {
 		System.out.println("To show Result" + result);
 		if (result == 0) {
 			JOptionPane.showMessageDialog(null, "添加成功");
+			Figures.flu.setAdding(false);
 			this.dispose();
 		} else if (result == 1){
 			JOptionPane.showMessageDialog(null, "查无此人", "Error", JOptionPane.ERROR_MESSAGE);
