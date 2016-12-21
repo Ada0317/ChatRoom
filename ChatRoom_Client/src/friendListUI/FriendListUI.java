@@ -211,7 +211,7 @@ public class FriendListUI extends JFrame {
 	public void updatelist(ListPane new_list){
 		scrollPane.updateUI();
 		scrollPane.setBorder(null);
-		scrollPane.setBounds(0, 0, 272, 420);
+//		scrollPane.setBounds(0, 0, 272, 420);
 //		scrollPane = new JScrollPane(new_list);
 //		Figures.list = list;//…Ë÷√list
 //		scrollPane.getVerticalScrollBar().setUI(new ScrollBarUI()); 
