@@ -3,6 +3,7 @@ package friendListUI;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+import dataBase.Figures;
 import dataBase.ListInfo;
 import dataBase.UserInfo;
 
@@ -106,8 +107,8 @@ public class ListPane extends JPanel {
 		if(has_new_member || has_new_list){
 			this.removeAll();
 			list = new_list;
-			this.initialize();
+			initialize();
+			Figures.flu.updatelist(this);
 		}
-		
 	}
 }

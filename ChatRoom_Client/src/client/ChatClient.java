@@ -233,7 +233,7 @@ public class ChatClient extends Thread {
 	 * @return 4 通讯协议错误
 	 * @throws IOException
 	 */
-	public int addFriend(int add_id, String list_name) throws IOException {
+	public void SendaddFriend(int add_id, String list_name) throws IOException {
 		MsgAddFriend maf = new MsgAddFriend();
 		byte data[] = list_name.getBytes();
 		int TotalLen = 17;
@@ -247,34 +247,38 @@ public class ChatClient extends Thread {
 		maf.setList_name(list_name);
 		byte[] sendMsg = PackageTool.packMsg(maf);
 		ous.write(sendMsg);
-
-		// 接收服务器的反馈信息
-		byte[] resp = receiveMsg();
-		// 将数组转换为类
-		MsgHead recMsg = ParseTool.parseMsg(resp);
-		if (recMsg.getType() != 0x55) {// 不是登陆反馈信息
-			System.out.println("通讯协议错误");
-			return 4;
-		}
-		MsgAddFriendResp mafr = (MsgAddFriendResp) recMsg;
-		byte resp_state = mafr.getState();
-		if (resp_state == 0x00) {
-			System.out.println("添加成功");
-			return 0;
-		} else if (resp_state == 0x01) {
-			System.out.println("查无此人");
-			return 1;
-		} else if (resp_state == 0x02) {
-			System.out.println("已有此人");
-			return 2;
-		} else if (resp_state == 0x03) {
-			System.out.println("创建通讯列表错误");
-			return 3;
-		} else {
-			System.out.println("通讯协议错误");
-		}
-		return 4;
+		ous.flush();
 	}
+
+//		System.out.println("Before");
+//		// 接收服务器的反馈信息
+//		byte[] resp = receiveMsg();
+//		
+//		System.out.println("After");
+//		// 将数组转换为类
+//		MsgHead recMsg = ParseTool.parseMsg(resp);
+//		if (recMsg.getType() != 0x55) {// 不是登陆反馈信息
+//			System.out.println("通讯协议错误");
+//			return 4;
+//		}
+//		MsgAddFriendResp mafr = (MsgAddFriendResp) recMsg;
+//		byte resp_state = mafr.getState();
+//		if (resp_state == 0x00) {
+//			System.out.println("添加成功");
+//			return 0;
+//		} else if (resp_state == 0x01) {
+//			System.out.println("查无此人");
+//			return 1;
+//		} else if (resp_state == 0x02) {
+//			System.out.println("已有此人");
+//			return 2;
+//		} else if (resp_state == 0x03) {
+//			System.out.println("创建通讯列表错误");
+//			return 3;
+//		} else {
+//			System.out.println("通讯协议错误");
+//		}
+//		return 4;
 
 	/**
 	 * sendMsg 发送信息
@@ -308,7 +312,7 @@ public class ChatClient extends Thread {
 	public byte[] receiveMsg() throws IOException {
 		DataInputStream dis = new DataInputStream(ins);
 		int totalLen = dis.readInt();
-//		System.out.println("TotalLen"+totalLen);
+		System.out.println("TotalLen"+totalLen);
 		// 读取totalLen长度的数据
 		byte[] data = new byte[totalLen - 4];
 		dis.readFully(data);
@@ -337,6 +341,16 @@ public class ChatClient extends Thread {
 			System.out.println("Refresh list");
 			ListInfo list = packlist(recMsg);
 			Figures.list.Refresh_List(list);
+		}
+		if (MsgType == 0x55){
+//			System.out.println("Here");
+			MsgAddFriendResp mafr = (MsgAddFriendResp) recMsg;
+			byte result = mafr.getState();
+			System.out.println("Add Friend Result "+result);
+			if(Figures.afu != null){
+//				System.out.println("To show Result");
+				Figures.afu.showResult(result);
+			}
 		}
 	}
 
@@ -381,10 +395,11 @@ public class ChatClient extends Thread {
 //		ChatClient cc = new ChatClient("localhost", 9090);
 //		if (cc.ConnectServer()) {
 //			System.out.println("连接服务器完成");
-//			int result = cc.Login(12, "123");
+//			int result = cc.Login(0, "123");
 //			if (result==0){
 //				System.out.println("登陆测试成功");
 //				cc.printList(cc.getlist());
+//				//cc.start();
 //				result = cc.addFriend(5, "新的列表");
 //				System.out.println(result);
 //			} else {

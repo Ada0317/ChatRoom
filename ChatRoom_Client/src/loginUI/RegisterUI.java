@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import client.ChatClient;
+import object.CloseButton;
 import object.ExitButton;
 import object.MinimizeButton;
 import object.RecButton;
@@ -96,7 +97,13 @@ public class RegisterUI extends JFrame {
 		//a.setRpassword(password);
 
 		// 设置自制按钮
-		ExitButton eb = new ExitButton();
+		CloseButton eb = new CloseButton();
+		eb.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				la.setIs_Registering(false);
+				dispose();
+			}
+		});
 		int windowWeith = this.getWidth();
 		eb.setBounds(windowWeith - 4 - 40, 0, 40, 30);
 		contentPane.add(eb);

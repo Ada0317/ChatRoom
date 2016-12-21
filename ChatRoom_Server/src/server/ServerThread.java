@@ -11,7 +11,9 @@ import dataBase.*;
 import msg.*;
 import tools.*;
 
+
 public class ServerThread extends Thread {
+	public  boolean is_sending = false;
 	private Socket client;
 	private OutputStream ous;
 	private int UserJK;
@@ -112,7 +114,13 @@ public class ServerThread extends Thread {
 
 			// 写入流中
 			byte[] sendmsg = PackageTool.packMsg(mrr);// 将传输的信息打包
+			//wait ous
+			while(is_sending);
+			//lock ous
+			is_sending = true;
 			ous.write(sendmsg);
+			//unlock
+			is_sending = false;
 			ous.flush();
 
 		}
@@ -147,8 +155,13 @@ public class ServerThread extends Thread {
 
 			// 写入流中
 			byte[] sendmsg = PackageTool.packMsg(mlr);// 将传输的信息打包
+			//wait ous
+			while(is_sending);
+			//lock ous
+			is_sending = true;
 			ous.write(sendmsg);
-			ous.flush();
+			//unlock
+			is_sending = false;
 
 			
 			
@@ -225,13 +238,17 @@ public class ServerThread extends Thread {
 			}
 			// 写入流中
 			byte[] sendmsg = PackageTool.packMsg(mafr);// 将传输的信息打包
+			
+			//wait ous
+			while(is_sending);
+			//lock ous
+			is_sending = true;
 			ous.write(sendmsg);
+			//unlock
+			is_sending = false;
+			
 			ous.flush();
 			
-			
-			
-			//send own_JK friend_list
-			SendFriendList();
 			//send Add_JK Friend list
 			model.add_friend(own_jk, add_jk, list_name);
 		}
@@ -312,7 +329,14 @@ public class ServerThread extends Thread {
 		// 写入流中
 		byte[] sendmsg = PackageTool.packMsg(mtl);
 		
+		//wait ous
+		while(is_sending);
+		//lock ous
+		is_sending = true;
 		ous.write(sendmsg);
+		//unlock
+		is_sending = false;
+		
 		ous.flush();
 
 	}
@@ -333,8 +357,14 @@ public class ServerThread extends Thread {
 		mct.setSrc(from);
 		mct.setMsgText(msg);
 		
-		byte[] send = PackageTool.packMsg(mct);
-		ous.write(send);
+		byte[] sendmsg = PackageTool.packMsg(mct);
+		//wait ous
+		while(is_sending);
+		//lock ous
+		is_sending = true;
+		ous.write(sendmsg);
+		//unlock
+		is_sending = false;
 		ous.flush();
 
 	}
