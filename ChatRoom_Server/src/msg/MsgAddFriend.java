@@ -1,5 +1,9 @@
 package msg;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class MsgAddFriend extends MsgHead{
 	private int add_ID;
 	private String list_name;
@@ -18,6 +22,17 @@ public class MsgAddFriend extends MsgHead{
 
 	public void setList_name(String list_name) {
 		this.list_name = list_name;
+	}
+	@Override
+	public byte[] packMessage() throws IOException {
+		ByteArrayOutputStream bous = new ByteArrayOutputStream();
+		DataOutputStream dous = new DataOutputStream(bous);
+		packMessageHead(dous);
+		dous.writeInt(getAdd_ID());
+		writeString(dous,getTotalLen() -  17,getList_name());
+		dous.flush();
+		byte[] data = bous.toByteArray();
+		return data;
 	}
 
 }
