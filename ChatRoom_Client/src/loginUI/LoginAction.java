@@ -80,14 +80,22 @@ public class LoginAction implements ActionListener {
 				String password = new String(password_field.getPassword());
 				if (password.equals(""))
 					JOptionPane.showMessageDialog(null, "密码不为空", "Error", JOptionPane.ERROR_MESSAGE);
-				else if (cc.Login(userid, password)) {//若密码正确
-					Figures.cc = cc;
-					new FriendListUI();
-					LoginJF.dispose();
-				}
-				else {//若密码错误
-					JOptionPane.showMessageDialog(null, "用户名或密码错误", "Error", JOptionPane.ERROR_MESSAGE);
-					password_field.setText("");
+				else{
+					int result = cc.Login(userid, password) ;
+					if(result == 0){//若密码正确
+						Figures.cc = cc;
+						new FriendListUI();
+						LoginJF.dispose();
+					}
+					else if (result == 1){//若密码错误
+						JOptionPane.showMessageDialog(null, "用户名或密码错误", "Error", JOptionPane.ERROR_MESSAGE);
+						password_field.setText("");
+					}
+					else if(result == 2){
+						JOptionPane.showMessageDialog(null, "该用户已经登陆", "Error", JOptionPane.ERROR_MESSAGE);
+						password_field.setText("");
+						userid_field.setText("");
+					}
 				}
 			}
 		} 

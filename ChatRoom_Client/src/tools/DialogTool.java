@@ -29,7 +29,7 @@ public class DialogTool {
 			 */
 			DialogUI dialog = DialogDB.dialogDB.get(String.valueOf(from));
 			dialog.ShowMsg(msg);
-			dialog.LetsShack();
+			//dialog.LetsShack();
 		}
 		else{
 			/*
@@ -40,7 +40,7 @@ public class DialogTool {
 			 * 直接弹出窗口
 			 */
 			UserInfo user = Figures.list.findUserByJK(from);
-			System.out.println("New MSG From"+user.getNickName());
+			//System.out.println("New MSG From"+user.getNickName());
 			DialogUI dialog =  new DialogUI(user.getNickName(),user.getPic(), from);
 			DialogRegDelTool.RegDialog(from, dialog);
 			dialog.ShowMsg(msg);

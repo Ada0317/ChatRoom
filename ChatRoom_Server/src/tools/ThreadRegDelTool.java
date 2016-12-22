@@ -15,8 +15,9 @@ public class ThreadRegDelTool {
 	}
 
 	// 从线程数据库中间删除
-	public static void DelThread(ServerThread thread) {
-		ThreadDB.threadDB.remove(thread.getUserJK());
+	public static void DelThread(int UserJK) {
+//		System.out.println("Del JK");
+		ThreadDB.threadDB.remove(String.valueOf(UserJK));
 	}
 
 }

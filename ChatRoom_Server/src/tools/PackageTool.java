@@ -84,6 +84,13 @@ public class PackageTool {
 		} else if (msgType == 0x04) {
 			MsgChatText mct = (MsgChatText) msg;
 			writeString(dous, mct.getTotalLen() - 13, mct.getMsgText());
+		} else if (msgType == 0x05) {
+			MsgAddFriend maf = (MsgAddFriend) msg;
+			dous.writeInt(maf.getAdd_ID());
+			writeString(dous,maf.getTotalLen() -  17,maf.getList_name());
+		} else if (msgType == 0x55) {
+			MsgAddFriendResp mafr = (MsgAddFriendResp) msg;
+			dous.write(mafr.getState());
 		}
 
 		dous.flush();
