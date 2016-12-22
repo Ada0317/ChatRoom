@@ -7,3 +7,5 @@
 # ECLIPSE
 .metadata
 .recommenders
+ChatRoom_Client/bin/**
+ChatRoom_Server/bin/**

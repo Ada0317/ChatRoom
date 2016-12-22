@@ -1,6 +1,8 @@
 package dataBase;
 
 import client.ChatClient;
+import friendListUI.AddFriendUI;
+import friendListUI.FriendListUI;
 import friendListUI.ListPane;
 
 public class Figures {
@@ -11,4 +13,6 @@ public class Figures {
 	public static int Pic;
 	public static String NickName;
 	public static ListPane list;
+	public static AddFriendUI afu;
+	public static FriendListUI flu;
 }

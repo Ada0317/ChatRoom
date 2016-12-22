@@ -23,7 +23,6 @@ public class ListName extends JLabel {
 	 */
 	public ListName(String name, JLabel[] users) {
 		setBackground(Color.DARK_GRAY);
-
 		lb_Name = new JLabel();
 		lb_Name.setForeground(Color.WHITE);
 		lb_Name.setBounds(new Rectangle(20, 10, 95, 20));

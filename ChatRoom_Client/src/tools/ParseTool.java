@@ -38,6 +38,7 @@ public class ParseTool {
 		ByteArrayInputStream bins = new ByteArrayInputStream(data);
 		DataInputStream dins = new DataInputStream(bins);
 		byte msgtype = dins.readByte();
+		//System.out.println("Type"+msgtype);
 		int dest = dins.readInt();
 		int src = dins.readInt();
 		if (msgtype == 0x01) {// 如果是注册信息
@@ -157,6 +158,30 @@ public class ParseTool {
 			mct.setMsgText(msgText);
 			
 			return mct;
+		}
+		
+		else if (msgtype == 0x05){ //添加好友
+			MsgAddFriend maf = new MsgAddFriend();
+			int add_id = dins.readInt();
+			String list_name = readString(dins, totalLen - 17);
+			maf.setTotalLen(totalLen);
+			maf.setType(msgtype);
+			maf.setDest(dest);
+			maf.setSrc(src);
+			maf.setAdd_ID(add_id);
+			maf.setList_name(list_name);
+			return maf;
+		}
+		
+		else if (msgtype == 0x55){ //添加好友回执
+			MsgAddFriendResp mafr = new MsgAddFriendResp();
+			byte state = dins.readByte();
+			mafr.setTotalLen(totalLen);
+			mafr.setType(msgtype);
+			mafr.setDest(dest);
+			mafr.setSrc(src);
+			mafr.setState(state);
+			return mafr;
 		}
 		
 		return null;

@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -18,15 +20,29 @@ import javax.swing.border.EmptyBorder;
 
 import dataBase.Figures;
 import dataBase.ListInfo;
+import object.AddButton;
 import object.ExitButton;
 import object.MinimizeButton;
 import object.ScrollBarUI;
 
 public class FriendListUI extends JFrame {
 
+	private boolean isAdding = false;
+	private ListPane list;
 	private int xx, yy;
 	private boolean isDraging = false;
+	private FriendListUI flu;
+	private JScrollPane scrollPane;
+	private JPanel panel;
+	
+	public boolean isAdding() {
+		return isAdding;
+	}
 
+	public void setAdding(boolean isAdding) {
+		this.isAdding = isAdding;
+	}
+	
 	private ListInfo user;
 	/**
 	 * 
@@ -39,13 +55,14 @@ public class FriendListUI extends JFrame {
 	 */
 	public FriendListUI() {
 		
-		
+		flu = this;
+		Figures.flu = this;
 		setBackground(Color.DARK_GRAY);
 
 		// 接收列表信息
 
 		try {
-			user = Figures.cc.getInfo();
+			user = Figures.cc.getlist();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -140,15 +157,15 @@ public class FriendListUI extends JFrame {
 		lblContacts.setBounds(15, 175, 226, 59);
 		contentPane.add(lblContacts);
 
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setBackground(Color.DARK_GRAY);
 		panel.setBounds(15, 244, 272, 450);
 		panel.setBorder(null);
 		contentPane.add(panel);
 		panel.setLayout(null);
 
-		ListPane list = new ListPane(user);
-		JScrollPane scrollPane = new JScrollPane(list);
+		list = new ListPane(user);
+		scrollPane = new JScrollPane(list);
 		Figures.list = list;//设置list
 		scrollPane.getVerticalScrollBar().setUI(new ScrollBarUI()); 
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);// 不显示水平滚动条；
@@ -156,7 +173,24 @@ public class FriendListUI extends JFrame {
 		scrollPane.setBorder(null);
 		scrollPane.setBounds(0, 0, 272, 420);
 		panel.add(scrollPane);
-
+		
+		AddButton button = new AddButton();
+		button.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 36));
+		button.setBounds(236, 186,40, 40);
+		contentPane.add(button);
+		button.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if(isAdding != true){
+					isAdding = true;
+					AddFriendUI afu = new AddFriendUI(flu, Figures.cc);
+				}
+				
+			}
+		});
+		
 		setVisible(true);
 		Toolkit kit = Toolkit.getDefaultToolkit(); // 定义工具包
 		Dimension screenSize = kit.getScreenSize(); // 获取屏幕的尺寸
@@ -172,7 +206,21 @@ public class FriendListUI extends JFrame {
 		Figures.cc.start();
 		
 		
-		
-		
 	}
+	
+	public void updatelist(ListPane new_list){
+//		scrollPane.updateUI();
+//		scrollPane.setBorder(null);
+//		scrollPane.setBounds(0, 0, 272, 420);
+//		scrollPane = new JScrollPane(new_list);
+//		Figures.list = list;//设置list
+//		scrollPane.getVerticalScrollBar().setUI(new ScrollBarUI()); 
+//		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);// 不显示水平滚动条；
+//		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+//		scrollPane.setBorder(null);
+//		scrollPane.setBounds(0, 0, 272, 420);
+//		panel.add(scrollPane);
+	}
+	
+	
 }

@@ -31,6 +31,8 @@ public class Member extends JLabel {
 	private JLabel lb_JKnum = null; // 显示JK号
 	private boolean is_exit = true;
 	private int MemberJKNum;
+	private JLabel lb_State;
+	
 	public String getNickname() {
 		return nickname;
 	}
@@ -76,7 +78,7 @@ public class Member extends JLabel {
 		 */
 		lb_JKnum = new JLabel();
 		lb_JKnum.setForeground(Color.WHITE);
-		lb_JKnum.setBounds(new Rectangle(70, 38, 80, 20));
+		lb_JKnum.setBounds(new Rectangle(70, 38, 150, 20));
 		lb_JKnum.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 15));
 		lb_JKnum.setText("JKNum:(" + JKNum + ")");
 
@@ -88,7 +90,7 @@ public class Member extends JLabel {
 			SState = "OnLine";
 		else
 			SState = "OffLine";
-		JLabel lb_State = new JLabel();
+		lb_State = new JLabel();
 		lb_State.setText(SState);
 		lb_State.setForeground(Color.WHITE);
 		lb_State.setFont(new Font("Microsoft JhengHei Light", Font.PLAIN, 18));
@@ -171,9 +173,17 @@ public class Member extends JLabel {
 	 * 当有来自这个人的信息
 	 */
 	public void hav_msg(){
-		System.out.println("Have_A_MSG");
+//		System.out.println("Have_A_MSG");
 		setIcon(new ImageIcon("img/ListImg/memberBGMsg.jpg"));
 	}
 	
+	public void set_state(byte state){
+		String SState;
+		if (state == 0)
+			SState = "OnLine";
+		else
+			SState = "OffLine";
+		lb_State.setText(SState);
+	}
 	
 }
